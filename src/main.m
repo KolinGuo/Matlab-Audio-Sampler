@@ -71,7 +71,9 @@ for i = 1:16
 end
 
 % save a field for recording sample
-handles.recordSample = [];
+handles.recordSample.points = [];
+handles.recordSample.sampleRate = 44100;    % default sample rate 44.1 kHz
+handles.recordSample.selectPeriod = [];   % unit: samplePoints(used in chopping and graphing)
 
 % Save the pad number of current selected sample
 handles.curPad = 0;
@@ -133,7 +135,7 @@ function chopEndEditText_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
+ 
 % --- Executes during object creation, after setting all properties.
 function delayText_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to delayText (see GCBO)
@@ -201,13 +203,17 @@ function pad1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button1,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [1, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [1, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(1).points,handles.samples(1).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -251,13 +257,17 @@ function pad2_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button2,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [2, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [2, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(2).points,handles.samples(2).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -301,13 +311,17 @@ function pad3_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button3,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [3, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [3, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(3).points,handles.samples(3).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -351,13 +365,17 @@ function pad4_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button4,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [4, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [4, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(4).points,handles.samples(4).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -401,13 +419,17 @@ function pad5_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button5,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [5, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [5, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(5).points,handles.samples(5).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -451,13 +473,17 @@ function pad6_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button6,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [6, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [6, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(6).points,handles.samples(6).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -501,13 +527,17 @@ function pad7_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button7,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [7, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [7, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(7).points,handles.samples(7).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -551,13 +581,17 @@ function pad8_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button8,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [8, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [8, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(8).points,handles.samples(8).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -601,13 +635,17 @@ function pad9_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button9,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [9, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [9, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(9).points,handles.samples(9).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -651,13 +689,17 @@ function pad10_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button10,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [10, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [10, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(10).points,handles.samples(10).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -701,13 +743,17 @@ function pad11_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button11,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [11, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [11, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(11).points,handles.samples(11).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -751,13 +797,17 @@ function pad12_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button12,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [12, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [12, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(12).points,handles.samples(12).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -801,13 +851,17 @@ function pad13_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button13,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [13, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [13, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(13).points,handles.samples(13).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -851,13 +905,17 @@ function pad14_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button14,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [14, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [14, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(14).points,handles.samples(14).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -901,13 +959,17 @@ function pad15_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button15,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [15, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [15, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(15).points,handles.samples(15).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -951,13 +1013,17 @@ function pad16_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 if(get(handles.recordButton,'UserData') && strcmp(get(handles.button16,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);
-    clear sound;
+    t = toc(handles.timerVal);                  % get the elapsed time
+    clear sound;                                % stop playing
+    rate = handles.recordSample.sampleRate;     % get sample rate
+    points = fix(t * rate);                     % convert time to sample points
+    
     % store the record
-    timeArr = get(handles.stopButton,'UserData');
-    timeArr(end,3) = t;
-    timeArr = [timeArr; [16, timeArr(end,2)+t, 0] ];
-    set(handles.stopButton,'UserData',timeArr);
+    pointArr = get(handles.stopButton,'UserData');
+    pointArr(end,3) = points;
+    pointArr = [ pointArr; [16, pointArr(end,2) + points, 0] ];
+    set(handles.stopButton,'UserData',pointArr);
+    
     % play the sound
     sound(handles.samples(16).points,handles.samples(16).sampleRate);
     handles.timerVal = tic;     % store tic
@@ -2241,67 +2307,70 @@ function recordButton_Callback(hObject, eventdata, handles)
 
 clear sound;
 % if in not record mode, start recording
-    set(hObject,'UserData',true);
-    set(handles.stopButton,'UserData',[0 0 0]);     % reset recording time
+set(hObject,'UserData',true);
+set(handles.stopButton,'UserData',[0 0 0]);     % reset recording time
     
-    % set status bar
+% set status bar
     
-    % start ticking
-    handles.timerVal = tic;
-    guidata(hObject,handles);   % update handles structure
+% start ticking
+handles.timerVal = tic;
+guidata(hObject,handles);   % update handles structure
 
+SetPadColor(handles);   % change the color of the pads
 
 % --- Executes on button press in stopButton.
 function stopButton_Callback(hObject, eventdata, handles)
 % hObject    handle to stopButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-clear sound;
-t = toc(handles.timerVal);
-timeArr = get(handles.stopButton,'UserData');
-timeArr(end,3) = t;
-set(handles.stopButton,'UserData',timeArr);
-guidata(hObject,handles);
 
-bars = str2double(get(handles.numBarsEdit,'String'));
-bpm = str2double(get(handles.bpmEdit,'String'));
+elapseT = toc(handles.timerVal);    % get the elapsed time of the last sample
+clear sound;                        % stop playing
+rate = handles.recordSample.sampleRate;     % get sample rate
+elapsePoints = fix(elapseT * rate);                     % convert time to sample points
 
-timeSigStr = cellstr(get(handles.timeSigEdit,'String'));
-timeSigStr = timeSigStr{get(handles.timeSigEdit,'Value')};
+pointArr = get(handles.stopButton,'UserData');   % get the sample points array for recording
+pointArr(end,3) = elapsePoints;   % save the elapsed points for the last sample
 
-% calculate time value for the recording
-timeValue = time_value(bars,timeSigStr,bpm);
-totalPoints = 44100 * timeValue;
+% sort the data
+sampleIdx = pointArr(2:end,1);           % the sample index
+sampleStartPoints = pointArr(2:end,2);     % the starting sample points of the samples
+sampleElapsePoints = pointArr(2:end,3);    % the elapsed sample points of the samples
 
+% calculate total recording point
+totalRecordPoints = sampleStartPoints(end) + sampleElapsePoints(end);
 
-% create an array to hold sample points
-finalRecord = zeros(totalPoints, 2);
-recordingSamplesInfo = get(handles.stopButton,'UserData');
-sampleInd = recordingSamplesInfo(2:end,1);
-sampleStartingTime = recordingSamplesInfo(2:end,2);
-sampleDuration = recordingSamplesInfo(2:end,3);
+% create an empty array to hold the sample points
+record = zeros(totalRecordPoints,2);
 
-sampleStartingPoints = fix(sampleStartingTime .* 44100);
-sampleDurationPoints = fix(sampleDuration .* 44100);
-
-totalRecordingPoints = sampleStartingPoints(end)+sampleDurationPoints(end);
-Record = zeros(totalRecordingPoints,2);
-
-for i = 1:size(sampleInd,1)
-    samplePoints = get(handles.samples(sampleInd(i)).points);
+for i = 1:size(sampleIdx,1)
+    samplePoints = handles.samples(sampleIdx(i)).points;
     if (size(samplePoints,2) == 2)
-        Record(sampleStartingPoints(i):(sampleStartingPoints(i) + sampleDurationPoints(i)) , :) = samplePoints(1:sampleDurationPoints(i) , :);                     
+        record(sampleStartPoints(i):(sampleStartPoints(i) + sampleElapsePoints(i) - 1) , :) = samplePoints(1:sampleElapsePoints(i) , :);                     
     else
         newSamplePoints = [samplePoints,samplePoints];
-        Record(sampleStartingPoints(i):(sampleStartingPoints(i) + sampleDurationPoints(i)) , :) = newSamplePoints(1:sampleDurationPoints(i) , :);
+        record(sampleStartPoints(i):(sampleStartPoints(i) + sampleElapsePoints(i) - 1) , :) = newSamplePoints(1:sampleElapsePoints(i) , :);
     end
 end
 
-Rounds = fix(totalRecordingPoints / totalPoints);
-numPointsLeft = totalRecordingPoints - Rounds * totalPoints;
+% get the info for recording
+bars = str2double(get(handles.numBarsEdit,'String'));
+bpm = str2double(get(handles.bpmEdit,'String'));
+timeSigStr = cellstr(get(handles.timeSigEdit,'String'));
+timeSigStr = timeSigStr{get(handles.timeSigEdit,'Value')};
 
-finalRecord = Record((Rounds-1) * totalPoints : Rounds * totalPoints , :);
-finalRecord(1:numPointsLeft , :) = Record((end-numPointsLeft):end , :);
+% calculate the duration for the recording
+duration = CalTimeFromBPM(bars,timeSigStr,bpm);
+totalPoints = rate * duration;
+
+rounds = fix(totalRecordPoints / totalPoints);
+numPointsLeft = totalRecordPoints - rounds * totalPoints;
+
+finalRecord = zeros(totalPoints,2);
+if(rounds >= 1)
+    finalRecord = record((rounds-1) * totalPoints : rounds * totalPoints , :);
+end
+finalRecord(1:numPointsLeft , :) = record((end-numPointsLeft + 1):end , :);
 
 sound(finalRecord,44100);
 
@@ -2312,6 +2381,8 @@ handles.recordSample.sampleRate = 44100;
 % add more
 
 guidata(hObject, handles);  % update handles structure
+
+ResetPadColor(handles);     % Reset the color of pads to default
 
 function bpmEdit_Callback(hObject, eventdata, handles)
 % hObject    handle to bpmEdit (see GCBO)
