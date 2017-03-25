@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 18-Mar-2017 22:30:44
+% Last Modified by GUIDE v2.5 24-Mar-2017 12:17:49
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1334,7 +1334,10 @@ if button_state == get(hObject,'Max')
     set(handles.cutButton,'Visible','off');
     set(handles.deleteButton,'Visible','off');
     set(handles.recordButton,'Enable','off');
-    
+    set(handles.playRecordButton,'Enable','off');
+    set(handles.saveFileButton,'Enable','off');
+    set(handles.savePadButton,'Enable','off');
+
     set(handles.loadFileButton,'Visible','on','Value',get(handles.loadFileButton,'Max'));
     set(handles.basicToneButton,'Visible','on');
     set(handles.exitLoadButton,'Visible','on');
@@ -1383,6 +1386,11 @@ function exitLoadButton_Callback(hObject, eventdata, handles)
     set(handles.cutButton,'Visible','on');
     set(handles.deleteButton,'Visible','on');
     set(handles.recordButton,'Enable','on');
+    if(~isempty(handles.recordSample.points))    % if there is a recording
+        set(handles.playRecordButton,'Enable','on');
+        set(handles.saveFileButton,'Enable','on');
+        set(handles.savePadButton,'Enable','on');
+    end
     ResetPadColor(handles);
     ClearStatus(handles);
 
@@ -1407,6 +1415,9 @@ if button_state == get(hObject,'Max')
     set(handles.cutButton,'Enable','off');
     set(handles.deleteButton,'Enable','off');
     set(handles.recordButton,'Enable','off');
+    set(handles.playRecordButton,'Enable','off');
+    set(handles.saveFileButton,'Enable','off');
+    set(handles.savePadButton,'Enable','off');
     SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(handles.loadButton,'Enable','on');
@@ -1415,6 +1426,11 @@ elseif button_state == get(hObject,'Min')
     set(handles.cutButton,'Enable','on');
     set(handles.deleteButton,'Enable','on');
     set(handles.recordButton,'Enable','on');
+    if(~isempty(handles.recordSample.points))    % if there is a recording
+        set(handles.playRecordButton,'Enable','on');
+        set(handles.saveFileButton,'Enable','on');
+        set(handles.savePadButton,'Enable','on');
+    end
     ResetPadColor(handles);
     ClearStatus(handles);
 end
@@ -1434,13 +1450,16 @@ if button_state == get(hObject,'Max')
         set(handles.status,'String',...
             'Copy Mode: Click on the pads to copy your samples from one pad to another and reclick ''Copy'' to cancel');
     end
-        set(handles.loadButton,'Enable','off');
-        set(handles.saveButton,'Enable','off');
-        set(handles.copyButton,'TooltipString','Reclick to return');
-        set(handles.cutButton,'Enable','off');
-        set(handles.deleteButton,'Enable','off');
-        set(handles.recordButton,'Enable','off');
-        SetPadColor(handles);
+    set(handles.loadButton,'Enable','off');
+    set(handles.saveButton,'Enable','off');
+    set(handles.copyButton,'TooltipString','Reclick to return');
+    set(handles.cutButton,'Enable','off');
+    set(handles.deleteButton,'Enable','off');
+    set(handles.recordButton,'Enable','off');
+    set(handles.playRecordButton,'Enable','off');
+    set(handles.saveFileButton,'Enable','off');
+    set(handles.savePadButton,'Enable','off');
+    SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(hObject,'UserData',[]);     % reset UserData
     set(handles.loadButton,'Enable','on');
@@ -1449,6 +1468,11 @@ elseif button_state == get(hObject,'Min')
     set(handles.cutButton,'Enable','on');
     set(handles.deleteButton,'Enable','on');
     set(handles.recordButton,'Enable','on');
+    if(~isempty(handles.recordSample.points))    % if there is a recording
+        set(handles.playRecordButton,'Enable','on');
+        set(handles.saveFileButton,'Enable','on');
+        set(handles.savePadButton,'Enable','on');
+    end
     ResetPadColor(handles);
     ClearStatus(handles);
 end
@@ -1468,13 +1492,16 @@ if button_state == get(hObject,'Max')
         set(handles.status,'String',...
             'Cut Mode: Click on the pads to move your samples from one pad to another and reclick ''Cut'' to cancel');
     end
-        set(handles.loadButton,'Enable','off');
-        set(handles.saveButton,'Enable','off');
-        set(handles.copyButton,'Enable','off');
-        set(handles.cutButton,'TooltipString','Reclick to return');
-        set(handles.deleteButton,'Enable','off');
-        set(handles.recordButton,'Enable','off');
-        SetPadColor(handles);
+    set(handles.loadButton,'Enable','off');
+    set(handles.saveButton,'Enable','off');
+    set(handles.copyButton,'Enable','off');
+    set(handles.cutButton,'TooltipString','Reclick to return');
+    set(handles.deleteButton,'Enable','off');
+    set(handles.recordButton,'Enable','off');
+    set(handles.playRecordButton,'Enable','off');
+    set(handles.saveFileButton,'Enable','off');
+    set(handles.savePadButton,'Enable','off');
+    SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(hObject,'UserData',[]);     % reset UserData
     set(handles.loadButton,'Enable','on');
@@ -1483,6 +1510,11 @@ elseif button_state == get(hObject,'Min')
     set(handles.cutButton,'TooltipString','');
     set(handles.deleteButton,'Enable','on');
     set(handles.recordButton,'Enable','on');
+    if(~isempty(handles.recordSample.points))    % if there is a recording
+        set(handles.playRecordButton,'Enable','on');
+        set(handles.saveFileButton,'Enable','on');
+        set(handles.savePadButton,'Enable','on');
+    end
     ResetPadColor(handles);
     ClearStatus(handles);
 end
@@ -1502,13 +1534,16 @@ if button_state == get(hObject,'Max')
         set(handles.status,'String',...
             'Delete Mode: Click on the pads to delete your samples from the pad and reclick ''Delete'' to quit');
     end
-        set(handles.loadButton,'Enable','off');
-        set(handles.saveButton,'Enable','off');
-        set(handles.copyButton,'Enable','off');
-        set(handles.cutButton,'Enable','off');
-        set(handles.deleteButton,'TooltipString','Reclick to return');
-        set(handles.recordButton,'Enable','off');
-        SetPadColor(handles);
+    set(handles.loadButton,'Enable','off');
+    set(handles.saveButton,'Enable','off');
+    set(handles.copyButton,'Enable','off');
+    set(handles.cutButton,'Enable','off');
+    set(handles.deleteButton,'TooltipString','Reclick to return');
+    set(handles.recordButton,'Enable','off');
+    set(handles.playRecordButton,'Enable','off');
+    set(handles.saveFileButton,'Enable','off');
+    set(handles.savePadButton,'Enable','off');
+    SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(handles.loadButton,'Enable','on');
     set(handles.saveButton,'Enable','on');
@@ -1516,6 +1551,11 @@ elseif button_state == get(hObject,'Min')
     set(handles.cutButton,'Enable','on');
     set(handles.deleteButton,'TooltipString','');
     set(handles.recordButton,'Enable','on');
+    if(~isempty(handles.recordSample.points))    % if there is a recording
+        set(handles.playRecordButton,'Enable','on');
+        set(handles.saveFileButton,'Enable','on');
+        set(handles.savePadButton,'Enable','on');
+    end
     ResetPadColor(handles);
     ClearStatus(handles);
 end
@@ -2098,7 +2138,7 @@ end
 
 function UpdateEffectsColor(handles)
 % Update the effect buttons' color
-% handles: structure with handles and user data
+%   handles: structure with handles and user data
 curPad = handles.curPad;    % get current pad
 % get data from current sample
 isReversed = handles.samples(curPad).isReversed;
@@ -2201,6 +2241,10 @@ set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
 set(handles.stopButton,'Enable','on');
 
 % disable other unrelated functionalities' buttons
+set(handles.bpmEdit,'Enable','off');
+set(handles.timeSigEdit,'Enable','off');
+set(handles.numBarsEdit,'Enable','off');
+set(handles.playRecordButton,'Enable','off');
 set(handles.saveFileButton,'Enable','off');
 set(handles.savePadButton,'Enable','off');
 set(handles.loadButton,'Enable','off');
@@ -2235,6 +2279,7 @@ function stopButton_Callback(hObject, eventdata, handles)
 
 elapseT = toc(handles.timerVal);    % get the elapsed time of the last sample
 clear sound;                        % stop playing
+ClearStatus(handles);               % clear status bar
 ShowBusyStatus(handles);    % show the 'Busy' status
 pause(.0000001);            % pause for a short time to allow status changes
 rate = handles.recordSample.sampleRate;     % get sample rate
@@ -2292,12 +2337,11 @@ numPointsLeft = totalRecordPoints - rounds * totalPoints;
 % to end
 if(rounds >= 1)
     finalRecord = record((rounds-1) * totalPoints + 1: rounds * totalPoints , :);
+else    % if there is less than 1 round
+    finalRecord = zeros(totalPoints,2);
 end
 % replace the points that are left behind in the last round
 finalRecord(1:numPointsLeft , :) = record((end-numPointsLeft + 1):end , :);
-
-% play the recording
-sound(finalRecord,rate);
 
 set(handles.recordButton,'UserData',false);     % stop recording
 set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
@@ -2311,7 +2355,13 @@ guidata(hObject, handles);  % update handles structure
 % disable the stop button
 set(handles.stopButton,'Enable','off');
 
-% enable the two saving buttons
+% enable the edit texts
+set(handles.bpmEdit,'Enable','on');
+set(handles.timeSigEdit,'Enable','on');
+set(handles.numBarsEdit,'Enable','on');
+
+% enable the play buttone and two saving buttons
+set(handles.playRecordButton,'Enable','on');
 set(handles.saveFileButton,'Enable','on');
 set(handles.savePadButton,'Enable','on');
 
@@ -2327,12 +2377,24 @@ set(handles.speedUpButton,'Enable','on');
 set(handles.toneControlButton,'Enable','on');
 set(handles.voiceRemovalButton,'Enable','on');
 
-% clear status bar
-ClearStatus(handles);
+% set status bar
+set(handles.status,'String','Successfully recorded');
 
 ResetPadColor(handles);     % Reset the color of pads to default
 
 HideBusyStatus(handles);    % hide the 'Busy' status
+
+% --- Executes on button press in playRecordButton.
+function playRecordButton_Callback(hObject, eventdata, handles)
+% hObject    handle to playRecordButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% play the recording
+sound(handles.recordSample.points,handles.recordSample.sampleRate);
+
+% set status bar
+set(handles.status,'String','Playing the recording');
 
 % --- Executes on button press in saveFileButton.
 function saveFileButton_Callback(hObject, eventdata, handles)
@@ -2379,8 +2441,8 @@ function bpmEdit_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of bpmEdit as text
-%        str2double(get(hObject,'String')) returns contents of bpmEdit as a double
+% change the tolTime text when bpm is changed
+ChangeTolTimeText(handles);
 
 % --- Executes on selection change in timeSigEdit.
 function timeSigEdit_Callback(hObject, eventdata, handles)
@@ -2388,17 +2450,79 @@ function timeSigEdit_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns timeSigEdit contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from timeSigEdit
+% change the tolTime text when time signature is changed
+ChangeTolTimeText(handles);
 
 function numBarsEdit_Callback(hObject, eventdata, handles)
 % hObject    handle to numBarsEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of numBarsEdit as text
-%        str2double(get(hObject,'String')) returns contents of numBarsEdit as a double
+% change the tolTime text when number of bars is changed
+ChangeTolTimeText(handles);
 
+function ChangeTolTimeText(handles)
+% change the tolTime text
+%   handles: structure with handles and user data
+
+ClearStatus(handles);   % clear status bar
+% get the info for recording
+bars = str2double(get(handles.numBarsEdit,'String'));
+bpm = str2double(get(handles.bpmEdit,'String'));
+timeSigStr = cellstr(get(handles.timeSigEdit,'String'));
+timeSigStr = timeSigStr{get(handles.timeSigEdit,'Value')};
+
+% check '# of bars' format
+if(isnan(bars) || ~isreal(bars)) % if it's not a real number
+    % show error status
+    set(handles.status,'String','Error: Wrong format of ''# of bars''');
+    % reset the numBarsEdit
+    set(handles.numBarsEdit,'String',get(handles.numBarsEdit,'UserData'));
+    % reset the variable bars
+    bars = str2double(get(handles.numBarsEdit,'UserData'));
+elseif(bars <= 0)   % if it's not a positive number
+    % show error status
+    set(handles.status,'String','Error: ''# of bars'' should be positive');
+    % reset the numBarsEdit
+    set(handles.numBarsEdit,'String',get(handles.numBarsEdit,'UserData'));
+    % reset the variable bars
+    bars = str2double(get(handles.numBarsEdit,'UserData'));
+else    % if the format is correct
+    % save the current string
+    set(handles.numBarsEdit,'UserData',get(handles.numBarsEdit,'String'));
+end
+
+% check 'BPM' format
+if(isnan(bpm) || ~isreal(bpm)) % if it's not a real number
+    % show error status
+    set(handles.status,'String','Error: Wrong format of ''BPM''');
+    % reset the numBarsEdit
+    set(handles.bpmEdit,'String',get(handles.bpmEdit,'UserData'));
+    % reset the variable bpm
+    bpm = str2double(get(handles.bpmEdit,'UserData'));
+elseif(bpm <= 0)   % if it's not a positive number
+    % show error status
+    set(handles.status,'String','Error: ''BPM'' should be positive');
+    % reset the numBarsEdit
+    set(handles.bpmEdit,'String',get(handles.bpmEdit,'UserData'));
+    % reset the variable bpm
+    bpm = str2double(get(handles.bpmEdit,'UserData'));
+else    % if the format is correct
+    % save the current string
+    set(handles.bpmEdit,'UserData',get(handles.bpmEdit,'String'));
+end
+
+% calculate the duration for the recording
+durationTime = CalTimeFromBPM(bars,timeSigStr,bpm);
+
+% change the display tolTime
+if(durationTime > 3600)
+    set(handles.tolTime,'String',...
+        string(duration([0 0 durationTime],'Format','hh:mm:ss')));
+else
+    set(handles.tolTime,'String',...
+        string(duration([0 0 durationTime],'Format','mm:ss')));
+end
 
 function SetPadColor(handles)
 % Set the color of empty pad to red and others to green
