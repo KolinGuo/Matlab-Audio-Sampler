@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 14-Mar-2017 08:30:40
+% Last Modified by GUIDE v2.5 14-Mar-2017 20:26:15
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -102,17 +102,14 @@ elseif(strcmp(get(handles.button1,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 1
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,1);
+        SaveFromPad(handles,1);
     % If in Delete Mode, delete samples from pad 1
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,1);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 1);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(1));
-        PlayStatus(handles,1);  % show the 'Playing' status
+        SelectButton(hObject, handles, 1);
+        PlayFromPad(handles, 1);
     end
 end
 
@@ -136,17 +133,14 @@ elseif(strcmp(get(handles.button2,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 2
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,2);
+        SaveFromPad(handles,2);
     % If in Delete Mode, delete samples from pad 2
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,2);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 2);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(2));
-        PlayStatus(handles,2);  % show the 'Playing' status
+        SelectButton(hObject, handles, 2);
+        PlayFromPad(handles, 2);
     end
 end
 
@@ -170,17 +164,14 @@ elseif(strcmp(get(handles.button3,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 3
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,3);
+        SaveFromPad(handles,3);
     % If in Delete Mode, delete samples from pad 3
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,3);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 3);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(3));
-        PlayStatus(handles,3);  % show the 'Playing' status
+        SelectButton(hObject, handles, 3);
+        PlayFromPad(handles, 3);
     end
 end
 
@@ -204,17 +195,14 @@ elseif(strcmp(get(handles.button4,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 4
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,4);
+        SaveFromPad(handles,4);
     % If in Delete Mode, delete samples from pad 4
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,4);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 4);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(4));
-        PlayStatus(handles,4);  % show the 'Playing' status
+        SelectButton(hObject, handles, 4);
+        PlayFromPad(handles, 4);
     end
 end
 
@@ -238,17 +226,14 @@ elseif(strcmp(get(handles.button5,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 5
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,5);
+        SaveFromPad(handles,5);
     % If in Delete Mode, delete samples from pad 5
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,5);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 5);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(5));
-        PlayStatus(handles,5);  % show the 'Playing' status
+        SelectButton(hObject, handles, 5);
+        PlayFromPad(handles, 5);
     end
 end
 
@@ -272,17 +257,14 @@ elseif(strcmp(get(handles.button6,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 6
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,6);
+        SaveFromPad(handles,6);
     % If in Delete Mode, delete samples from pad 6
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,6);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 6);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(6));
-        PlayStatus(handles,6);  % show the 'Playing' status
+        SelectButton(hObject, handles, 6);
+        PlayFromPad(handles, 6);
     end
 end
 
@@ -306,17 +288,14 @@ elseif(strcmp(get(handles.button7,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 7
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,7);
+        SaveFromPad(handles,7);
     % If in Delete Mode, delete samples from pad 7
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,7);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 7);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(7));
-        PlayStatus(handles,7);  % show the 'Playing' status
+        SelectButton(hObject, handles, 7);
+        PlayFromPad(handles, 7);
     end
 end
 
@@ -340,17 +319,14 @@ elseif(strcmp(get(handles.button8,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 8
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,8);
+        SaveFromPad(handles,8);
     % If in Delete Mode, delete samples from pad 8
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,8);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 8);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(8));
-        PlayStatus(handles,8);  % show the 'Playing' status
+        SelectButton(hObject, handles, 8);
+        PlayFromPad(handles, 8);
     end
 end
 
@@ -374,17 +350,14 @@ elseif(strcmp(get(handles.button9,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 9
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,9);
+        SaveFromPad(handles,9);
     % If in Delete Mode, delete samples from pad 9
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,9);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 9);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(9));
-        PlayStatus(handles,9);  % show the 'Playing' status
+        SelectButton(hObject, handles, 9);
+        PlayFromPad(handles, 9);
     end
 end
 
@@ -408,17 +381,14 @@ elseif(strcmp(get(handles.button10,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 10
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,10);
+        SaveFromPad(handles,10);
     % If in Delete Mode, delete samples from pad 10
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,10);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 10);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(10));
-        PlayStatus(handles,10);  % show the 'Playing' status
+        SelectButton(hObject, handles, 10);
+        PlayFromPad(handles, 10);
     end
 end
 
@@ -442,17 +412,14 @@ elseif(strcmp(get(handles.button11,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 11
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,11);
+        SaveFromPad(handles,11);
     % If in Delete Mode, delete samples from pad 11
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,11);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 11);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(11));
-        PlayStatus(handles,11);  % show the 'Playing' status
+        SelectButton(hObject, handles, 11);
+        PlayFromPad(handles, 11);
     end
 end
 
@@ -476,17 +443,14 @@ elseif(strcmp(get(handles.button12,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 12
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,12);
+        SaveFromPad(handles,12);
     % If in Delete Mode, delete samples from pad 12
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,12);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 12);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(12));
-        PlayStatus(handles,12);  % show the 'Playing' status
+        SelectButton(hObject, handles, 12);
+        PlayFromPad(handles, 12);
     end
 end
 
@@ -510,17 +474,14 @@ elseif(strcmp(get(handles.button13,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 13
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,13);
+        SaveFromPad(handles,13);
     % If in Delete Mode, delete samples from pad 13
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,13);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 13);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(13));
-        PlayStatus(handles,13);  % show the 'Playing' status
+        SelectButton(hObject, handles, 13);
+        PlayFromPad(handles, 13);
     end
 end
 
@@ -544,17 +505,14 @@ elseif(strcmp(get(handles.button14,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 14
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,14);
+        SaveFromPad(handles,14);
     % If in Delete Mode, delete samples from pad 14
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,14);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 14);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(14));
-        PlayStatus(handles,14);  % show the 'Playing' status
+        SelectButton(hObject, handles, 14);
+        PlayFromPad(handles, 14);
     end
 end
 
@@ -578,17 +536,14 @@ elseif(strcmp(get(handles.button15,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 15
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,15);
+        SaveFromPad(handles,15);
     % If in Delete Mode, delete samples from pad 15
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,15);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 15);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(15));
-        PlayStatus(handles,15);  % show the 'Playing' status
+        SelectButton(hObject, handles, 15);
+        PlayFromPad(handles, 15);
     end
 end
 
@@ -612,17 +567,14 @@ elseif(strcmp(get(handles.button16,'Visible'),'off')) % if no sample
 else    % if there is a sample
     % If in Save Mode, save samples from pad 16
     if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(hObject,handles,16);
+        SaveFromPad(handles,16);
     % If in Delete Mode, delete samples from pad 16
     elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
         DelFromPad(hObject,handles,16);
     % Normal Play sound
     else
-        ShowButton(hObject, handles, 16);
-        BusyStatus(handles);    % show the 'Busy' status
-        pause(0.0000001);       % pause for a short time to allow status changes
-        PlaySound(handles.samples(16));
-        PlayStatus(handles,16);  % show the 'Playing' status
+        SelectButton(hObject, handles, 16);
+        PlayFromPad(handles, 16);
     end
 end
 
@@ -631,37 +583,38 @@ function LoadToPad(hObject,handles,num)
 %   hObject: handle to pad
 %   handles: structure with handles and user data
 %   num: the pad which the sample is loading into
-filePath = GetLoadPath();   % get file path
-BusyStatus(handles);        % show the 'Busy' status
-pause(.0000001);            % pause for a short time to allow status changes
-handles.samples(num) = Load(filePath);  % load the file to handles
-SetPadColor(handles);       % refresh the color of pads
-if(isempty(handles.samples(num).points))    % if user canceled to load
+[pathname, filename] = GetLoadPath();   % get file path
+if filename == 0  % if user canceled to load
     set(handles.status,'String','Load Mode: Cancel to load');
 else
-    statusStr = sprintf('Load Mode: Successfully load into pad %d',num);
+    BusyStatus(handles);        % show the 'Busy' status
+    pause(.0000001);            % pause for a short time to allow status changes
+    handles.samples(num) = Load([pathname, filename]);  % load the file to handles
+    guidata(hObject, handles);  % update handles
+    SetPadColor(handles);       % refresh the color of pads
+    statusStr = sprintf('Load Mode: Successfully load ''%s'' into pad %d',filename,num);
     set(handles.status,'String',statusStr);
-    ShowButton(hObject, handles, num);
+    ShowButton(handles, num);
+    if(handles.curPad == 0)
+        SelectButton(hObject,handles,num);
+    end
 end
-guidata(hObject, handles);  % update handles
 
-function SaveFromPad(hObject,handles,num)
+function SaveFromPad(handles,num)
 % Save the sample to file from the corresponding pad
 %   hObject: handle to pad
 %   handles: structure with handles and user data
 %   num: the pad which the sample is saving from
-filePath = GetSavePath(num);    % get file path
-if isnumeric(filePath)     % if user canceled to save
+[pathname, filename] = GetSavePath(num);    % get file path
+if filename == 0     % if user canceled to save
     set(handles.status,'String','Save Mode: Cancel to save');
 else
     BusyStatus(handles);        % show the 'Busy' status
     pause(.0000001);            % pause for a short time to allow status changes
-    Save(filePath,handles.samples(num));  % save the file
-    statusStr = sprintf('Save Mode: Successfully save from pad %d',num);
+    Save([pathname, filename],handles.samples(num));  % save the file
+    statusStr = sprintf('Save Mode: Successfully save from pad %d as ''%s''',num,filename);
     set(handles.status,'String',statusStr);
-    ShowButton(hObject, handles, num);
 end
-guidata(hObject, handles);  % update handles
 
 function CopyFromPadToPad(hObject,handles,num)
 % Copy the sample from a pad to another
@@ -676,24 +629,27 @@ if(isempty(get(handles.copyButton,'UserData')))     % if it was the first click
         padStr = ['pad',num2str(num)];    % the field name of the object
         set(handles.(padStr),'BackgroundColor',[0.231 0.894 0.929]);   % change color to turquoise
         set(handles.copyButton,'UserData',num);     % save the pad number
-        statusStr = sprintf('Copy Mode: Copy pad %d to ...',num);   % show status
+        statusStr = sprintf('Copy Mode: Copy from pad %d to ...',num);   % show status
         set(handles.status,'String',statusStr);
     end
 else    % if it was the second click, copy the sample and reset color
-    copyPadNum = get(handles.copyButton,'UserData');
+    copyFromPad = get(handles.copyButton,'UserData');
     BusyStatus(handles);        % show the 'Busy' status
     pause(.0000001);            % pause for a short time to allow status changes
-    handles.samples(num) = handles.samples(copyPadNum);   % copy the sample
+    handles.samples(num) = handles.samples(copyFromPad);   % copy the sample
+    guidata(hObject, handles);  % update handles
     SetPadColor(handles);   % refresh color
-    ShowButton(hObject, handles, num);  % select the pad
-    statusStr = sprintf('Copy Mode: Successfully copy from pad %d to pad %d',copyPadNum,num);   % show status
-    if(num == copyPadNum)   % Add A Joke
+    ShowButton(handles,num);
+    if(copyFromPad == handles.curPad)
+        SelectButton(hObject, handles, num);  % select the pad
+    end
+    statusStr = sprintf('Copy Mode: Successfully copy from pad %d to pad %d',copyFromPad,num);   % show status
+    if(num == copyFromPad)   % Add A Joke
         statusStr = [statusStr '...Wait...What are you thinking???'];
     end
     set(handles.status,'String',statusStr);
     set(handles.copyButton,'UserData',[]);      % reset UserData
 end
-guidata(hObject, handles);  % update handles
 
 function CutFromPadToPad(hObject,handles,num)
 % Cut the sample from a pad to another
@@ -708,29 +664,32 @@ if(isempty(get(handles.cutButton,'UserData')))     % if it was the first click
         padStr = ['pad',num2str(num)];    % the field name of the object
         set(handles.(padStr),'BackgroundColor',[0.231 0.392 0.929]);   % change color to blue
         set(handles.cutButton,'UserData',num);     % save the pad number
-        statusStr = sprintf('Cut Mode: Cut pad %d to ...',num);   % show status
+        statusStr = sprintf('Cut Mode: Cut from pad %d to ...',num);   % show status
         set(handles.status,'String',statusStr);
     end
 else    % if it was the second click, copy the sample, delete the original and reset color
-    cutPadNum = get(handles.cutButton,'UserData');
+    cutFromPad = get(handles.cutButton,'UserData');
     BusyStatus(handles);        % show the 'Busy' status
     pause(.0000001);            % pause for a short time to allow status changes
-    handles.samples(num) = handles.samples(cutPadNum);   % copy the sample
-    if(num ~= cutPadNum)    % if cutting a pad to itself will not delete the sample
-        handles.samples(cutPadNum).points = [];  % delete the original sample
-        handles.samples(cutPadNum).sampleRate = 0;
+    handles.samples(num) = handles.samples(cutFromPad);   % copy the sample
+    if(num ~= cutFromPad)    % if cutting a pad to itself will not delete the sample
+        handles.samples(cutFromPad).points = [];  % delete the original sample
+        handles.samples(cutFromPad).sampleRate = 0;
     end
-    HideButton(hObject, handles, cutPadNum);  % hide the button of original pad
-    ShowButton(hObject, handles, num);  % select the current pad
+    guidata(hObject, handles);  % update handles
+    HideButton(handles, cutFromPad);  % hide the button of original pad
+    ShowButton(handles,num);    % show the button of new pad
+    if(cutFromPad == handles.curPad)
+        SelectButton(hObject, handles, num);  % select the cut-to pad
+    end
     SetPadColor(handles);   % refresh color
-    statusStr = sprintf('Cut Mode: Successfully cut from pad %d to pad %d',cutPadNum,num);   % show status
-    if(num == cutPadNum)   % Add A Joke
+    statusStr = sprintf('Cut Mode: Successfully cut from pad %d to pad %d',cutFromPad,num);   % show status
+    if(num == cutFromPad)   % Add A Joke
         statusStr = [statusStr '...Wait...What are you thinking???'];
     end
     set(handles.status,'String',statusStr);
     set(handles.cutButton,'UserData',[]);      % reset UserData
 end
-guidata(hObject, handles);  % update handles
 
 function DelFromPad(hObject,handles,num)
 % Delete the sample from the corresponding pad
@@ -741,23 +700,33 @@ BusyStatus(handles);        % show the 'Busy' status
 pause(.0000001);            % pause for a short time to allow status changes
 handles.samples(num).points = [];  % delete the sample
 handles.samples(num).sampleRate = 0;
+guidata(hObject, handles);  % update handles
 SetPadColor(handles);       % refresh the color of pads
 
 statusStr = sprintf('Delete Mode: Successfully delete the sample in pad %d',num);
 set(handles.status,'String',statusStr);
 
-HideButton(hObject, handles, num);  % Hide the button
-clear sound;
-guidata(hObject, handles);  % update handles
+HideButton(handles, num);   % Hide the button
+if(handles.curPad == num)   % If trying to delete the current pad
+    SelectOtherButton(hObject,handles);     % Select other buttons (if any)
+end
 
-function [filePath] = GetLoadPath()
+function PlayFromPad(handles, num)
+% Play the sample from the corresponding pad
+%   handles: structure with handles and user data
+%   num: the pad which the sample needs to be played
+BusyStatus(handles);    % show the 'Busy' status
+pause(0.0000001);       % pause for a short time to allow status changes
+PlaySound(handles.samples(num));
+PlayStatus(handles,num);  % show the 'Playing' status
+
+function [pathname, filename] = GetLoadPath()
 [filename, pathname] = uigetfile(...
     {'*.aiff;*.aif;*.aifc;*.au;*.flac;*.m4a;*.mp3;*.mp4;*.oga;*.ogg;*.snd;*.wav',....
     'Audio (*.aiff, *.aif, *.aifc, *.au, *.flac, *.m4a, *.mp3, *.mp4, *.oga, *.ogg, *.snd, *.wav)'},...
     'Select an audio file');
-filePath = [pathname, filename];
 
-function [filePath] = GetSavePath(num)
+function [pathname, filename] = GetSavePath(num)
 defaultFilename = ['pad' num2str(num)];
 [filename, pathname] = uiputfile(...
     {'*.wav','Waveform Audio File (*.wav)';...
@@ -765,7 +734,60 @@ defaultFilename = ['pad' num2str(num)];
     '*.flac','Free Lossless Audio Codec (*.flac)';...
     '*.ogg;*.oga','Ogg Vorbis (*.ogg, *.oga)'},...
     'Save as an audio file', defaultFilename);
-filePath = [pathname, filename];
+
+% --- Executes on button press in button1.
+function button1_Callback(hObject, eventdata, handles)
+% hObject    handle to button1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button1
+
+
+% --- Executes on button press in button2.
+function button2_Callback(hObject, eventdata, handles)
+% hObject    handle to button2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button2
+
+
+% --- Executes on button press in button3.
+function button3_Callback(hObject, eventdata, handles)
+% hObject    handle to button3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button3
+
+
+% --- Executes on button press in button4.
+function button4_Callback(hObject, eventdata, handles)
+% hObject    handle to button4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button4
+
+
+% --- Executes on button press in button5.
+function button5_Callback(hObject, eventdata, handles)
+% hObject    handle to button5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button5
+
+
+% --- Executes on button press in button6.
+function button6_Callback(hObject, eventdata, handles)
+% hObject    handle to button6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button6
+
 
 % --- Executes on button press in button7.
 function button7_Callback(hObject, eventdata, handles)
@@ -775,6 +797,16 @@ function button7_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of button7
 
+
+% --- Executes on button press in button8.
+function button8_Callback(hObject, eventdata, handles)
+% hObject    handle to button8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button8
+
+
 % --- Executes on button press in button9.
 function button9_Callback(hObject, eventdata, handles)
 % hObject    handle to button9 (see GCBO)
@@ -782,6 +814,43 @@ function button9_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button9
+
+
+% --- Executes on button press in button10.
+function button10_Callback(hObject, eventdata, handles)
+% hObject    handle to button10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button10
+
+
+% --- Executes on button press in button11.
+function button11_Callback(hObject, eventdata, handles)
+% hObject    handle to button11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button11
+
+
+% --- Executes on button press in button12.
+function button12_Callback(hObject, eventdata, handles)
+% hObject    handle to button12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button12
+
+
+% --- Executes on button press in button13.
+function button13_Callback(hObject, eventdata, handles)
+% hObject    handle to button13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of button13
+
 
 % --- Executes on button press in button14.
 function button14_Callback(hObject, eventdata, handles)
@@ -791,6 +860,7 @@ function button14_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of button14
 
+
 % --- Executes on button press in button15.
 function button15_Callback(hObject, eventdata, handles)
 % hObject    handle to button15 (see GCBO)
@@ -799,6 +869,7 @@ function button15_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of button15
 
+
 % --- Executes on button press in button16.
 function button16_Callback(hObject, eventdata, handles)
 % hObject    handle to button16 (see GCBO)
@@ -806,6 +877,7 @@ function button16_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button16
+
 
 % --- Executes on button press in loadButton.
 function loadButton_Callback(hObject, eventdata, handles)
@@ -900,6 +972,7 @@ if button_state == get(hObject,'Max')
     set(handles.deleteButton,'Visible','off');
     SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
+    set(hObject,'UserData',[]);     % reset UserData
     set(handles.loadButton,'Visible','on');
     set(handles.saveButton,'Visible','on');
     set(handles.copyButton,'Visible','on');
@@ -951,28 +1024,46 @@ for i = 1:16
     set(handles.(str),'BackgroundColor',[0.94 0.94 0.94]);
 end
 
-function ShowButton(hObject, handles, num)
-% Show the button of the correponding pad
+function ShowButton(handles, num)
+% Show the button of the corresponding pad
 str = ['button',num2str(num)];
-set(handles.(str),'Visible','on','Value',get(handles.(str),'Max'));
+set(handles.(str),'Visible','on');
+
+function SelectButton(hObject, handles, num)
+% Select the button of the corresponding pad
+str = ['button',num2str(num)];
+set(handles.(str),'Value',get(handles.(str),'Max'));
+% if the current pad is going to be selected or Copy Mode or Cut Mode,
+% continue to play;
+% otherwise, stop playing
+if(~(handles.curPad == num || ...
+        get(handles.copyButton,'Value') == get(handles.copyButton,'Max') ||...
+        get(handles.cutButton,'Value') == get(handles.cutButton,'Max')))
+    clear sound;
+end
 handles.curPad = num;
 guidata(hObject, handles);
-    
-function HideButton(hObject, handles, num)
+
+function HideButton(handles, num)
 % Hide the button of the correponding pad
 str = ['button',num2str(num)];
 set(handles.(str),'Visible','off');
+
+function SelectOtherButton(hObject,handles)
 % Select another available pad
 for i = 1:16
     str = ['button',num2str(i)];    % the field name of the object
     if(strcmp(get(handles.(str),'Visible'), 'on')) % if it's available
-        set(handles.(str),'Value',get(handles.(str),'Max'));    % select it
-        handles.curPad = i;
+        SelectButton(hObject, handles, i);
         break;
     end
 end
-guidata(hObject, handles);
-    
+% if there is no loaded pad
+if(i == 16 && strcmp(get(handles.button16,'Visible'), 'off'))
+    handles.curPad = 0;
+    guidata(hObject, handles);
+end
+
 function PlayStatus(handles,num)
 % Show the 'Playing' status
     statusStr = sprintf('Playing from pad %d',num);
@@ -990,4 +1081,3 @@ function BusyStatus(handles)
 function ClearStatus(handles)
 % Clear the status bar
     set(handles.status,'String','');
-
