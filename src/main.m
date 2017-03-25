@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 24-Mar-2017 12:17:49
+% Last Modified by GUIDE v2.5 24-Mar-2017 14:41:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -44,7 +44,7 @@ end
 % End initialization code - DO NOT EDIT
 
 % --- Executes just before main is made visible.
-function main_OpeningFcn(hObject, eventdata, handles, varargin)
+function main_OpeningFcn(hObject, ~, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -93,17 +93,25 @@ handles.slider = jRangeSlider;
 % save a field for timerVal
 handles.timerVal = [];
 
+% create two timer class for loop recording
+timerText = timer('Name','Text Timer', 'ExecutionMode','fixedRate',...
+            'Period',1, 'StartDelay',1,...
+            'TimerFcn',{@changeCurRecordTime, handles});
+timerPlot = timer;
+handles.timerText = timerText;
+handles.timerPlot = timerPlot;
+
 % Update handles structure
 guidata(hObject, handles);
 
-function main_DeleteFcn(hObject, eventdata, handles)
+function main_DeleteFcn(~, ~, ~)
 % hObject    handle to main (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 clear sound;    % stop playing when the GUI is closed
 
 % --- Outputs from this function are returned to the command line.
-function varargout = main_OutputFcn(hObject, eventdata, handles) 
+function varargout = main_OutputFcn(~, ~, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -113,7 +121,7 @@ function varargout = main_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 % --- Executes during object creation, after setting all properties.
-function chopStartEditText_CreateFcn(hObject, eventdata, handles)
+function chopStartEditText_CreateFcn(hObject, ~, ~)
 % hObject    handle to chopStartEditText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -125,7 +133,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % --- Executes during object creation, after setting all properties.
-function chopEndEditText_CreateFcn(hObject, eventdata, handles)
+function chopEndEditText_CreateFcn(hObject, ~, ~)
 % hObject    handle to chopEndEditText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -137,7 +145,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
  
 % --- Executes during object creation, after setting all properties.
-function delayText_CreateFcn(hObject, eventdata, handles)
+function delayText_CreateFcn(hObject, ~, ~)
 % hObject    handle to delayText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -149,7 +157,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % --- Executes during object creation, after setting all properties.
-function speedUpText_CreateFcn(hObject, eventdata, handles)
+function speedUpText_CreateFcn(hObject, ~, ~)
 % hObject    handle to speedUpText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -161,7 +169,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % --- Executes during object creation, after setting all properties.
-function bpmEdit_CreateFcn(hObject, eventdata, handles)
+function bpmEdit_CreateFcn(hObject, ~, ~)
 % hObject    handle to bpmEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -173,7 +181,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % --- Executes during object creation, after setting all properties.
-function timeSigEdit_CreateFcn(hObject, eventdata, handles)
+function timeSigEdit_CreateFcn(hObject, ~, ~)
 % hObject    handle to timeSigEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -185,7 +193,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % --- Executes during object creation, after setting all properties.
-function numBarsEdit_CreateFcn(hObject, eventdata, handles)
+function numBarsEdit_CreateFcn(hObject, ~, ~)
 % hObject    handle to numBarsEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -197,7 +205,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % --- Executes on button press in pad1.
-function pad1_Callback(hObject, eventdata, handles)
+function pad1_Callback(hObject, ~, handles)
 % hObject    handle to pad1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -239,7 +247,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad2.
-function pad2_Callback(hObject, eventdata, handles)
+function pad2_Callback(hObject, ~, handles)
 % hObject    handle to pad2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -281,7 +289,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad3.
-function pad3_Callback(hObject, eventdata, handles)
+function pad3_Callback(hObject, ~, handles)
 % hObject    handle to pad3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -323,7 +331,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad4.
-function pad4_Callback(hObject, eventdata, handles)
+function pad4_Callback(hObject, ~, handles)
 % hObject    handle to pad4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -365,7 +373,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad5.
-function pad5_Callback(hObject, eventdata, handles)
+function pad5_Callback(hObject, ~, handles)
 % hObject    handle to pad5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -407,7 +415,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad6.
-function pad6_Callback(hObject, eventdata, handles)
+function pad6_Callback(hObject, ~, handles)
 % hObject    handle to pad6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -449,7 +457,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad7.
-function pad7_Callback(hObject, eventdata, handles)
+function pad7_Callback(hObject, ~, handles)
 % hObject    handle to pad7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -491,7 +499,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad8.
-function pad8_Callback(hObject, eventdata, handles)
+function pad8_Callback(hObject, ~, handles)
 % hObject    handle to pad8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -533,7 +541,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad9.
-function pad9_Callback(hObject, eventdata, handles)
+function pad9_Callback(hObject, ~, handles)
 % hObject    handle to pad9 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -575,7 +583,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad10.
-function pad10_Callback(hObject, eventdata, handles)
+function pad10_Callback(hObject, ~, handles)
 % hObject    handle to pad10 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -617,7 +625,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad11.
-function pad11_Callback(hObject, eventdata, handles)
+function pad11_Callback(hObject, ~, handles)
 % hObject    handle to pad11 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -659,7 +667,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad12.
-function pad12_Callback(hObject, eventdata, handles)
+function pad12_Callback(hObject, ~, handles)
 % hObject    handle to pad12 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -701,7 +709,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad13.
-function pad13_Callback(hObject, eventdata, handles)
+function pad13_Callback(hObject, ~, handles)
 % hObject    handle to pad13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -743,7 +751,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad14.
-function pad14_Callback(hObject, eventdata, handles)
+function pad14_Callback(hObject, ~, handles)
 % hObject    handle to pad14 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -785,7 +793,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad15.
-function pad15_Callback(hObject, eventdata, handles)
+function pad15_Callback(hObject, ~, handles)
 % hObject    handle to pad15 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -827,7 +835,7 @@ else % if not in record mode
 end
 
 % --- Executes on button press in pad16.
-function pad16_Callback(hObject, eventdata, handles)
+function pad16_Callback(hObject, ~, handles)
 % hObject    handle to pad16 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1084,9 +1092,16 @@ function RecordPad(hObject, handles, num)
 %   handles: structure with handles and user data
 %   num: the pad which the sample needs to be recorded
 t = toc(handles.timerVal);                  % get the elapsed time
+stop(handles.timerText);                    % stop the timer for text
 clear sound;                                % stop playing
 rate = handles.recordSample.sampleRate;     % get sample rate
 points = fix(t * rate);                     % convert time to sample points
+
+% get the current time
+curTime = get(handles.curTimeText,'UserData');
+curTime = curTime + t;  % add the elapsed time
+handles.timerText.StartDelay = 1 - rem(curTime,1);  % set delay for next second
+set(handles.curTimeText,'UserData',curTime);    % store the current time
 
 % store the record
 pointArr = get(handles.stopButton,'UserData');
@@ -1096,6 +1111,14 @@ set(handles.stopButton,'UserData',pointArr);
 
 % create string for buttons
 strButton = ['button',num2str(num)];
+
+% if there is a sample, play the sound
+if(strcmp(get(handles.(strButton),'Visible'),'on'))
+    sound(handles.samples(num).points,handles.samples(num).sampleRate);
+end
+handles.timerVal = tic;     % store tic
+start(handles.timerText);    % start the timer for text
+guidata(hObject,handles);   % update handles structure
 
 % show the corresponding status indicating whether there is a sample or not
 if(strcmp(get(handles.(strButton),'Visible'),'on'))     % if there is a sample
@@ -1108,13 +1131,6 @@ end
 
 % select the button
 SelectButton(hObject, handles, num);
-
-% if there is a sample, play the sound
-if(strcmp(get(handles.(strButton),'Visible'),'on'))
-    sound(handles.samples(num).points,handles.samples(num).sampleRate);
-end
-handles.timerVal = tic;     % store tic
-guidata(hObject,handles);   % update handles structure
     
 function SaveRecordToPad(hObject,handles,num)
 % Save the recording in to the corresponding pad
@@ -1158,7 +1174,7 @@ defaultFilename = ['pad' num2str(num)];
     'Save as an audio file', defaultFilename);
 
 % --- Executes on button press in button1.
-function button1_Callback(hObject, eventdata, handles)
+function button1_Callback(hObject, ~, handles)
 % hObject    handle to button1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1168,7 +1184,7 @@ SelectButton(hObject, handles, 1);  % select the button
 SelectStatus(handles,1);    % show status
 
 % --- Executes on button press in button2.
-function button2_Callback(hObject, eventdata, handles)
+function button2_Callback(hObject, ~, handles)
 % hObject    handle to button2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1178,7 +1194,7 @@ SelectButton(hObject, handles, 2);  % select the button
 SelectStatus(handles,2);    % show status
 
 % --- Executes on button press in button3.
-function button3_Callback(hObject, eventdata, handles)
+function button3_Callback(hObject, ~, handles)
 % hObject    handle to button3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1188,7 +1204,7 @@ SelectButton(hObject, handles, 3);  % select the button
 SelectStatus(handles,3);    % show status
 
 % --- Executes on button press in button4.
-function button4_Callback(hObject, eventdata, handles)
+function button4_Callback(hObject, ~, handles)
 % hObject    handle to button4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1198,7 +1214,7 @@ SelectButton(hObject, handles, 4);  % select the button
 SelectStatus(handles,4);    % show status
 
 % --- Executes on button press in button5.
-function button5_Callback(hObject, eventdata, handles)
+function button5_Callback(hObject, ~, handles)
 % hObject    handle to button5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1208,7 +1224,7 @@ SelectButton(hObject, handles, 5);  % select the button
 SelectStatus(handles,5);    % show status
 
 % --- Executes on button press in button6.
-function button6_Callback(hObject, eventdata, handles)
+function button6_Callback(hObject, ~, handles)
 % hObject    handle to button6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1218,7 +1234,7 @@ SelectButton(hObject, handles, 6);  % select the button
 SelectStatus(handles,6);    % show status
 
 % --- Executes on button press in button7.
-function button7_Callback(hObject, eventdata, handles)
+function button7_Callback(hObject, ~, handles)
 % hObject    handle to button7 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1228,7 +1244,7 @@ SelectButton(hObject, handles, 7);  % select the button
 SelectStatus(handles,7);    % show status
 
 % --- Executes on button press in button8.
-function button8_Callback(hObject, eventdata, handles)
+function button8_Callback(hObject, ~, handles)
 % hObject    handle to button8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1238,7 +1254,7 @@ SelectButton(hObject, handles, 8);  % select the button
 SelectStatus(handles,8);    % show status
 
 % --- Executes on button press in button9.
-function button9_Callback(hObject, eventdata, handles)
+function button9_Callback(hObject, ~, handles)
 % hObject    handle to button9 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1248,7 +1264,7 @@ SelectButton(hObject, handles, 9);  % select the button
 SelectStatus(handles,9);    % show status
 
 % --- Executes on button press in button10.
-function button10_Callback(hObject, eventdata, handles)
+function button10_Callback(hObject, ~, handles)
 % hObject    handle to button10 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1258,7 +1274,7 @@ SelectButton(hObject, handles, 10);  % select the button
 SelectStatus(handles,10);    % show status
 
 % --- Executes on button press in button11.
-function button11_Callback(hObject, eventdata, handles)
+function button11_Callback(hObject, ~, handles)
 % hObject    handle to button11 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1268,7 +1284,7 @@ SelectButton(hObject, handles, 11);  % select the button
 SelectStatus(handles,11);    % show status
 
 % --- Executes on button press in button12.
-function button12_Callback(hObject, eventdata, handles)
+function button12_Callback(hObject, ~, handles)
 % hObject    handle to button12 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1278,7 +1294,7 @@ SelectButton(hObject, handles, 12);  % select the button
 SelectStatus(handles,12);    % show status
 
 % --- Executes on button press in button13.
-function button13_Callback(hObject, eventdata, handles)
+function button13_Callback(hObject, ~, handles)
 % hObject    handle to button13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1288,7 +1304,7 @@ SelectButton(hObject, handles, 13);  % select the button
 SelectStatus(handles,13);    % show status
 
 % --- Executes on button press in button14.
-function button14_Callback(hObject, eventdata, handles)
+function button14_Callback(hObject, ~, handles)
 % hObject    handle to button14 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1298,7 +1314,7 @@ SelectButton(hObject, handles, 14);  % select the button
 SelectStatus(handles,14);    % show status
 
 % --- Executes on button press in button15.
-function button15_Callback(hObject, eventdata, handles)
+function button15_Callback(hObject, ~, handles)
 % hObject    handle to button15 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1308,7 +1324,7 @@ SelectButton(hObject, handles, 15);  % select the button
 SelectStatus(handles,15);    % show status
 
 % --- Executes on button press in button16.
-function button16_Callback(hObject, eventdata, handles)
+function button16_Callback(hObject, ~, handles)
 % hObject    handle to button16 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1318,7 +1334,7 @@ SelectButton(hObject, handles, 16);  % select the button
 SelectStatus(handles,16);    % show status
 
 % --- Executes on button press in loadButton.
-function loadButton_Callback(hObject, eventdata, handles)
+function loadButton_Callback(hObject, ~, handles)
 % hObject    handle to loadButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1346,7 +1362,7 @@ if button_state == get(hObject,'Max')
 end
 
 % --- Executes on button press in loadFileButton.
-function loadFileButton_Callback(hObject, eventdata, handles)
+function loadFileButton_Callback(~, ~, handles)
 % hObject    handle to loadFileButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1357,7 +1373,7 @@ set(handles.status,'String',...
         'Load File Mode: Click on the pads to load your samples and click ''Exit'' to quit');
     
 % --- Executes on button press in basicToneButton.
-function basicToneButton_Callback(hObject, eventdata, handles)
+function basicToneButton_Callback(~, ~, handles)
 % hObject    handle to basicToneButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1368,7 +1384,7 @@ set(handles.status,'String',...
         'Basic Tone Mode: Click on the pads to load from a piano keyboard and click ''Exit'' to quit');
     
 % --- Executes on button press in exitLoadButton.
-function exitLoadButton_Callback(hObject, eventdata, handles)
+function exitLoadButton_Callback(~, ~, handles)
 % hObject    handle to exitLoadButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1395,7 +1411,7 @@ function exitLoadButton_Callback(hObject, eventdata, handles)
     ClearStatus(handles);
 
 % --- Executes on button press in saveButton.
-function saveButton_Callback(hObject, eventdata, handles)
+function saveButton_Callback(hObject, ~, handles)
 % hObject    handle to saveButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1436,7 +1452,7 @@ elseif button_state == get(hObject,'Min')
 end
 
 % --- Executes on button press in copyButton.
-function copyButton_Callback(hObject, eventdata, handles)
+function copyButton_Callback(hObject, ~, handles)
 % hObject    handle to copyButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1478,7 +1494,7 @@ elseif button_state == get(hObject,'Min')
 end
 
 % --- Executes on button press in cutButton.
-function cutButton_Callback(hObject, eventdata, handles)
+function cutButton_Callback(hObject, ~, handles)
 % hObject    handle to cutButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1520,7 +1536,7 @@ elseif button_state == get(hObject,'Min')
 end
 
 % --- Executes on button press in deleteButton.
-function deleteButton_Callback(hObject, eventdata, handles)
+function deleteButton_Callback(hObject, ~, handles)
 % hObject    handle to deleteButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1649,7 +1665,7 @@ end
 HideBusyStatus(handles);    % hide the 'Busy' status
 
 % --- Executes on dragging the slider.
-function slider_StateChangedCallback(hObject, eventdata, handles)
+function slider_StateChangedCallback(hObject, ~, handles)
 % hObject    handle to jRandeSlider
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data
@@ -1674,7 +1690,7 @@ guidata(handles.main,handles);
 ChangeChopEditText(handles);
 
 % --- Executes on releasing the mouse on the slider.
-function slider_MouseReleasedCallback(hObject, eventdata, handles)
+function slider_MouseReleasedCallback(~, ~, handles)
 % hObject    handle to jRandeSlider
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data
@@ -1694,7 +1710,7 @@ else % if the sample is stereo
     set(handles.axes2, 'XTickLabel',{});
 end
 
-function chopStartEditText_Callback(hObject, eventdata, handles)
+function chopStartEditText_Callback(hObject, ~, handles)
 % hObject    handle to chopStartEditText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1734,7 +1750,7 @@ if(~isempty(seconds)) % if the format is correct
 end
 ChangeChopEditText(handles);
 
-function chopEndEditText_Callback(hObject, eventdata, handles)
+function chopEndEditText_Callback(hObject, ~, handles)
 % hObject    handle to chopEndEditText (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1794,7 +1810,7 @@ else    % correct format
 end
     
 % --- Executes on button press in chopButton.
-function chopButton_Callback(hObject, eventdata, handles)
+function chopButton_Callback(hObject, ~, handles)
 % hObject    handle to chopButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1883,7 +1899,7 @@ else % < 0.000015 s
 end
 
 % --- Executes on button press in reversalButton.
-function reversalButton_Callback(hObject, eventdata, handles)
+function reversalButton_Callback(hObject, ~, handles)
 % hObject    handle to reversalButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1912,7 +1928,7 @@ else    % if there is a sample selected
 end
 
 % --- Executes on button press in delayButton.
-function delayButton_Callback(hObject, eventdata, handles)
+function delayButton_Callback(~, ~, handles)
 % hObject    handle to delayButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1942,7 +1958,7 @@ else    % if there is a sample selected
 end
 
 % --- Executes on button press in delayApplyButton.
-function delayApplyButton_Callback(hObject, eventdata, handles)
+function delayApplyButton_Callback(hObject, ~, handles)
 % hObject    handle to delayApplyButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1981,7 +1997,7 @@ else    % if the format is correct
 end
     
 % --- Executes on button press in speedUpButton.
-function speedUpButton_Callback(hObject, eventdata, handles)
+function speedUpButton_Callback(~, ~, handles)
 % hObject    handle to speedUpButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -2012,7 +2028,7 @@ else    % if there is a sample selected
 end
 
 % --- Executes on button press in speedUpApplyButton.
-function speedUpApplyButton_Callback(hObject, eventdata, handles)
+function speedUpApplyButton_Callback(hObject, ~, handles)
 % hObject    handle to speedUpApplyButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -2050,7 +2066,7 @@ else    % if the format is correct
 end
 
 % --- Executes on button press in toneControlButton.
-function toneControlButton_Callback(hObject, eventdata, handles)
+function toneControlButton_Callback(~, ~, handles)
 % hObject    handle to toneControlButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -2103,7 +2119,7 @@ else    % if there is a sample selected
 end
 
 % --- Executes on button press in voiceRemovalButton.
-function voiceRemovalButton_Callback(hObject, eventdata, handles)
+function voiceRemovalButton_Callback(hObject, ~, handles)
 % hObject    handle to voiceRemovalButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -2222,7 +2238,7 @@ set(handles.status,'String','Successfully applied the effects');
 HideBusyStatus(handles);    % hide the 'Busy' status
 
 % --- Executes on button press in recordButton.
-function recordButton_Callback(hObject, eventdata, handles)
+function recordButton_Callback(hObject, ~, handles)
 % hObject    handle to recordButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -2236,6 +2252,7 @@ cla(handles.axes2);
 % if in not record mode, start recording
 set(hObject,'UserData',true);
 set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
+set(handles.curTimeText,'UserData',0);          % reset recording starting time
 
 % enable the stop button
 set(handles.stopButton,'Enable','on');
@@ -2267,19 +2284,40 @@ handles.curPad = 0;
     
 % start ticking
 handles.timerVal = tic;
+start(handles.timerText);   % stop the timer for text
 guidata(hObject,handles);   % update handles structure
 
 SetPadColor(handles);   % change the color of the pads
 
 % --- Executes on button press in stopButton.
-function stopButton_Callback(hObject, eventdata, handles)
+function stopButton_Callback(hObject, ~, handles)
 % hObject    handle to stopButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 elapseT = toc(handles.timerVal);    % get the elapsed time of the last sample
+stop(handles.timerText);            % stop the timer for text
 clear sound;                        % stop playing
 ClearStatus(handles);               % clear status bar
+
+% get the time format
+tolTimeDataCell = get(handles.tolTimeText,'UserData');
+format = tolTimeDataCell{1};
+% reset the curTimeText
+set(handles.curTimeText,'String',...
+        string(duration([0 0 0],'Format',format)));
+
+% if the recording is playing, stop playing and reset
+if(get(handles.playRecordButton,'UserData'))   
+    % disable stop button
+    set(hObject,'Enable','off');
+    
+    % reset playing status
+    set(handles.playRecordButton,'UserData',[]);
+    return;
+end
+
+% create the sample
 ShowBusyStatus(handles);    % show the 'Busy' status
 pause(.0000001);            % pause for a short time to allow status changes
 rate = handles.recordSample.sampleRate;     % get sample rate
@@ -2324,8 +2362,8 @@ timeSigStr = cellstr(get(handles.timeSigEdit,'String'));
 timeSigStr = timeSigStr{get(handles.timeSigEdit,'Value')};
 
 % calculate the duration for the recording
-duration = CalTimeFromBPM(bars,timeSigStr,bpm);
-totalPoints = rate * duration;
+durationTime = CalTimeFromBPM(bars,timeSigStr,bpm);
+totalPoints = rate * durationTime;
 
 % calculate how many rounds the recording has been through
 rounds = fix(totalRecordPoints / totalPoints);
@@ -2343,8 +2381,10 @@ end
 % replace the points that are left behind in the last round
 finalRecord(1:numPointsLeft , :) = record((end-numPointsLeft + 1):end , :);
 
+% reset loop recording mode
 set(handles.recordButton,'UserData',false);     % stop recording
 set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
+set(handles.curTimeText,'UserData',0);          % reset recording starting time
 
 % save the recording to handles
 handles.recordSample.points = finalRecord;
@@ -2385,19 +2425,33 @@ ResetPadColor(handles);     % Reset the color of pads to default
 HideBusyStatus(handles);    % hide the 'Busy' status
 
 % --- Executes on button press in playRecordButton.
-function playRecordButton_Callback(hObject, eventdata, handles)
+function playRecordButton_Callback(hObject, ~, handles)
 % hObject    handle to playRecordButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+clear sound;    % clear the sound that is currently playing
+if(get(hObject,'UserData'))     % if it is currently playing, stop it
+    stopButton_Callback(handles.stopButton, NaN, handles);
+end
+
+set(hObject,'UserData',true);   % start playing
+
+set(handles.stopButton,'Enable','on');      % enable the stop button
+set(handles.recordButton,'Enable','off');   % disable the record button
+
+handles.timerText.StartDelay = 1;   % reset the start delay of the timer
 
 % play the recording
 sound(handles.recordSample.points,handles.recordSample.sampleRate);
 
+% start the timer
+start(handles.timerText);
+
 % set status bar
-set(handles.status,'String','Playing the recording');
+set(handles.status,'String','Playing the recording. Click ''Stop'' to stop playing');
 
 % --- Executes on button press in saveFileButton.
-function saveFileButton_Callback(hObject, eventdata, handles)
+function saveFileButton_Callback(~, ~, handles)
 % Save the recording to file
 % hObject    handle to saveFileButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -2424,7 +2478,7 @@ else
 end
 
 % --- Executes on button press in savePadButton.
-function savePadButton_Callback(hObject, eventdata, handles)
+function savePadButton_Callback(hObject, ~, handles)
 % Save the recording to pad
 % hObject    handle to savePadButton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -2436,33 +2490,33 @@ SetPadColor(handles);   % set the color of the pads
 set(handles.status,'String','Click any of the pads to save the recording to that pad');
 set(hObject,'UserData',true);
 
-function bpmEdit_Callback(hObject, eventdata, handles)
+function bpmEdit_Callback(~, ~, handles)
 % hObject    handle to bpmEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% change the tolTime text when bpm is changed
+% change the tolTimeText text when bpm is changed
 ChangeTolTimeText(handles);
 
 % --- Executes on selection change in timeSigEdit.
-function timeSigEdit_Callback(hObject, eventdata, handles)
+function timeSigEdit_Callback(~, ~, handles)
 % hObject    handle to timeSigEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% change the tolTime text when time signature is changed
+% change the tolTimeText text when time signature is changed
 ChangeTolTimeText(handles);
 
-function numBarsEdit_Callback(hObject, eventdata, handles)
+function numBarsEdit_Callback(~, ~, handles)
 % hObject    handle to numBarsEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% change the tolTime text when number of bars is changed
+% change the tolTimeText text when number of bars is changed
 ChangeTolTimeText(handles);
 
 function ChangeTolTimeText(handles)
-% change the tolTime text
+% change the tolTimeText text
 %   handles: structure with handles and user data
 
 ClearStatus(handles);   % clear status bar
@@ -2515,14 +2569,73 @@ end
 % calculate the duration for the recording
 durationTime = CalTimeFromBPM(bars,timeSigStr,bpm);
 
-% change the display tolTime
+% choose the correct format
 if(durationTime > 3600)
-    set(handles.tolTime,'String',...
-        string(duration([0 0 durationTime],'Format','hh:mm:ss')));
+    format = 'hh:mm:ss';
 else
-    set(handles.tolTime,'String',...
-        string(duration([0 0 durationTime],'Format','mm:ss')));
+    format = 'mm:ss';
 end
+
+% change the display tolTimeText & curTimeText
+set(handles.tolTimeText,'String',...
+    string(duration([0 0 durationTime],'Format',format)));
+set(handles.curTimeText,'String',...
+    string(duration([0 0 0],'Format',format)));
+
+% store the format & duration of the recording
+set(handles.tolTimeText,'UserData',{format,durationTime});
+
+function changeCurRecordTime(obj, ~, handles)
+% execute when timerText starts
+% change the current recording time
+%   obj: the handle to the timer object
+%   event: store the data of when the function is called
+%   handles: structure with handles and user data
+
+% get the latest handles structure
+handles = guidata(handles.main);
+
+% get the current time
+strCurTime = get(handles.curTimeText,'String');
+curTime = ConvertStrToTime(strCurTime,handles);
+% add 1 second to it
+curTime = curTime + 1;
+% get the time format and durationTime
+tolTimeDataCell = get(handles.tolTimeText,'UserData');
+format = tolTimeDataCell{1};
+durationTime = tolTimeDataCell{2};
+
+if(get(handles.playRecordButton,'UserData'))     % if it is currently playing
+    % show the current time
+    set(handles.curTimeText,'String',...
+        string(duration([0 0 curTime],'Format',format)));
+    if(durationTime - curTime < 1)  % if there is less than 1 second
+        stop(obj);  % stop the timer
+        ClearStatus(handles);   % clear the status
+    end
+    return;
+end
+
+if(durationTime == curTime)     % if it's exactly at the end
+    set(handles.curTimeText,'String',...
+        string(duration([0 0 0],'Format',format)));
+elseif(durationTime - curTime < 1)  % if there is less than 1 second
+    set(handles.curTimeText,'String',...
+        string(duration([0 0 curTime],'Format',format)));   % show the current time
+    stop(obj);  % stop timer
+    pause(durationTime - curTime);  % pause for the remaining time
+    set(handles.curTimeText,'String',...
+        string(duration([0 0 0],'Format',format)));
+    start(obj); % restart timer
+else    % if there is more than 1 second
+    set(handles.curTimeText,'String',...
+        string(duration([0 0 curTime],'Format',format)));
+end
+
+
+
+
+
 
 function SetPadColor(handles)
 % Set the color of empty pad to red and others to green

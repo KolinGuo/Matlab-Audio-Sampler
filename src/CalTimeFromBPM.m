@@ -4,7 +4,7 @@ function duration = CalTimeFromBPM(bars,str,bpm)
 %   bars: number of bars
 %   str:  time signature
 %   bpm:  beats per minute
-%   duration: the duration of the recording
+%   duration: the duration of the recording in seconds
     if(strcmp(str,'4/4'))
         duration = (bars * 4) * (60 / bpm);
     elseif(strcmp(str,'6/8'))
