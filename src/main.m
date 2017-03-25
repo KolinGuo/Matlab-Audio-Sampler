@@ -96,8 +96,11 @@ handles.timerVal = [];
 % create two timer class for loop recording
 timerText = timer('Name','Text Timer', 'ExecutionMode','fixedRate',...
             'Period',1, 'StartDelay',1,...
-            'TimerFcn',{@changeCurRecordTime, handles});
-timerPlot = timer;
+            'TimerFcn',{@ChangeCurRecordTime, handles});
+timerPlot = timer('Name','Plot Timer', 'ExecutionMode','fixedRate',...
+            'Period',0.5, 'StartDelay',0,...
+            'UserData',[0 0],...
+            'TimerFcn',{@PlotCurRecord, handles});
 handles.timerText = timerText;
 handles.timerPlot = timerPlot;
 
@@ -1093,6 +1096,7 @@ function RecordPad(hObject, handles, num)
 %   num: the pad which the sample needs to be recorded
 t = toc(handles.timerVal);                  % get the elapsed time
 stop(handles.timerText);                    % stop the timer for text
+stop(handles.timerPlot);                    % stop the timer for plot
 clear sound;                                % stop playing
 rate = handles.recordSample.sampleRate;     % get sample rate
 points = fix(t * rate);                     % convert time to sample points
@@ -1101,6 +1105,7 @@ points = fix(t * rate);                     % convert time to sample points
 curTime = get(handles.curTimeText,'UserData');
 curTime = curTime + t;  % add the elapsed time
 handles.timerText.StartDelay = 1 - rem(curTime,1);  % set delay for next second
+handles.timerPlot.StartDelay = 0.5 - rem(curTime,0.5);% set delay for next plot period
 set(handles.curTimeText,'UserData',curTime);    % store the current time
 
 % store the record
@@ -1118,6 +1123,7 @@ if(strcmp(get(handles.(strButton),'Visible'),'on'))
 end
 handles.timerVal = tic;     % store tic
 start(handles.timerText);    % start the timer for text
+start(handles.timerPlot);    % start the timer for plot
 guidata(hObject,handles);   % update handles structure
 
 % show the corresponding status indicating whether there is a sample or not
@@ -1579,16 +1585,36 @@ end
 function Plot(handles)
 % Plot the waveplot of selected sample
 %   handles: structure with handles and user data
-num = handles.curPad;   % get the current pad
+
+% if in record mode or playing the recording
+if(get(handles.recordButton,'UserData') || get(handles.playRecordButton,'UserData'))
+    sample = handles.recordSample;  % get the recording sample
+    
+    % show the recordPlotText
+    set(handles.recordPlotText,'Visible','on');
+    
+    % hide the slider and chopping
+    set(handles.slider,'Visible',0);
+    set(handles.chopStartStaticText,'Visible','off');
+    set(handles.chopStartEditText,'Visible','off');
+    set(handles.chopEndStaticText,'Visible','off');
+    set(handles.chopEndEditText,'Visible','off');
+    set(handles.chopButton,'Visible','off');
+else    % if not in record mode
+    num = handles.curPad;   % get the current pad
+    sample = handles.samples(num);  % get the current sample
+end
+
 ShowBusyStatus(handles);    % show the 'Busy' status
 pause(.0000001);            % pause for a short time to allow status changes
-if(size(handles.samples(num).points,2) == 1) % if the sample is mono
+
+if(size(sample.points,2) == 1) % if the sample is mono
     set(handles.axes1,'Visible','on');
     set(handles.leftChannelText,'Visible','off');
     set(handles.axes2,'Visible','off');
     set(handles.rightChannelText,'Visible','off');
     
-    WavePlot(handles.axes1, handles.samples(num).points, handles.samples(num).sampleRate);
+    WavePlot(handles.axes1, sample.points, sample.sampleRate);
     ChangePlotXAxisLabel(handles.axes1, handles);
     set(handles.axes1,'XAxisLocation','top',...
             'Position',[181 450 925 212],...
@@ -1597,8 +1623,8 @@ else % if the sample is stereo
     set(handles.axes1,'Visible','on');
     set(handles.axes2,'Visible','on');
     
-    WavePlot(handles.axes1, handles.samples(num).points(:,1), handles.samples(num).sampleRate);
-    WavePlot(handles.axes2, handles.samples(num).points(:,2), handles.samples(num).sampleRate);
+    WavePlot(handles.axes1, sample.points(:,1), sample.sampleRate);
+    WavePlot(handles.axes2, sample.points(:,2), sample.sampleRate);
     set(handles.leftChannelText,'Visible','on');
     set(handles.rightChannelText,'Visible','on');
     ChangePlotXAxisLabel(handles.axes1, handles);
@@ -1613,23 +1639,29 @@ else % if the sample is stereo
 end
 pause(.0000001);            % pause for a short time
 
-% change the start & end time edit text
-ChangeChopEditText(handles);
+% if not (in record mode or playing the recording)
+if(~(get(handles.recordButton,'UserData') || get(handles.playRecordButton,'UserData')))
+    % change the start & end time edit text
+    ChangeChopEditText(handles);
 
-% get the select period and lasting time
-period = handles.samples(num).selectPeriod;
-duration = size(handles.samples(num).points,1);
-% set the slider to current property
-set(handles.slider,'Minimum',1,'Maximum',duration,...
+    % get the select period and lasting time
+    period = sample.selectPeriod;
+    duration = size(sample.points,1);
+    % set the slider to current property
+    set(handles.slider,'Minimum',1,'Maximum',duration,...
             'LowValue',period(1),'HighValue',period(2));
 
-% set slider and chopping visible
-set(handles.slider,'Visible',1);
-set(handles.chopStartStaticText,'Visible','on');
-set(handles.chopStartEditText,'Visible','on');
-set(handles.chopEndStaticText,'Visible','on');
-set(handles.chopEndEditText,'Visible','on');
-set(handles.chopButton,'Visible','on');
+    % hide the recordPlotText
+    set(handles.recordPlotText,'Visible','off');
+        
+    % set slider and chopping visible
+    set(handles.slider,'Visible',1);
+    set(handles.chopStartStaticText,'Visible','on');
+    set(handles.chopStartEditText,'Visible','on');
+    set(handles.chopEndStaticText,'Visible','on');
+    set(handles.chopEndEditText,'Visible','on');
+    set(handles.chopButton,'Visible','on');
+end
 
 HideBusyStatus(handles);    % hide the 'Busy' status
 
@@ -1637,12 +1669,19 @@ function ChangePlotXAxisLabel(ax, handles)
 % Change the x-axis of the waveplot
 %   ax: the axis of the waveplot
 %   handles: structure with handles and user data
-ShowBusyStatus(handles);    % show the 'Busy' status
 
-num = handles.curPad;   % get the current pad
-sampleRate = handles.samples(num).sampleRate;   % get the current sample rate
-startTime = handles.samples(num).selectPeriod(1)/sampleRate;   % get start time in sec
-endTime = handles.samples(num).selectPeriod(2)/sampleRate;     % get end time in sec
+ShowBusyStatus(handles);    % show the 'Busy' status
+% if in record mode or playing the recording
+if(get(handles.recordButton,'UserData') || get(handles.playRecordButton,'UserData'))
+    sample = handles.recordSample;  % get the recording sample
+else    % if not in record mode
+    num = handles.curPad;   % get the current pad
+    sample = handles.samples(num);  % get the current sample
+end
+
+sampleRate = sample.sampleRate;   % get the current sample rate
+startTime = sample.selectPeriod(1)/sampleRate;   % get start time in sec
+endTime = sample.selectPeriod(2)/sampleRate;     % get end time in sec
 [interval,factor,format] = GetTimeFormat(handles);     % Calculate the interval and format for time
 
 xtick = ceil(startTime*factor)/factor + interval.* [0:14];
@@ -1832,6 +1871,7 @@ HideBusyStatus(handles);    % hide the 'Busy' status
 
 function ChangeChopEditText(handles)
 % change the chop start & end edit text
+
 [~,~,format] = GetTimeFormat(handles);    % Calculate the format for time
 num = handles.curPad;   % get the current pad
 sampleRate = handles.samples(num).sampleRate;   % get the current sample rate
@@ -1859,10 +1899,18 @@ function [interval,factor,format] = GetTimeFormat(handles)
 %   handles: structure with handles and user data
 %   interval: the interval of waveplot x-axis
 %   format: the format for duration conversion
-num = handles.curPad;   % get the current pad
-sampleRate = handles.samples(num).sampleRate;   % get the current sample rate
-startTime = handles.samples(num).selectPeriod(1)/sampleRate;   % get start time in sec
-endTime = handles.samples(num).selectPeriod(2)/sampleRate;     % get end time in sec
+
+% if in record mode or playing the recording
+if(get(handles.recordButton,'UserData') || get(handles.playRecordButton,'UserData'))
+    sample = handles.recordSample;  % get the recording sample
+else    % if not in record mode
+    num = handles.curPad;   % get the current pad
+    sample = handles.samples(num);  % get the current sample
+end
+
+sampleRate = sample.sampleRate;   % get the current sample rate
+startTime = sample.selectPeriod(1)/sampleRate;   % get start time in sec
+endTime = sample.selectPeriod(2)/sampleRate;     % get end time in sec
 elapseTime = endTime - startTime;
 if(elapseTime >= 15) % 15 s
     interval = ceil(elapseTime / 15);
@@ -2245,10 +2293,6 @@ function recordButton_Callback(hObject, ~, handles)
 
 clear sound;
 
-% clear the axes
-cla(handles.axes1);
-cla(handles.axes2);
-
 % if in not record mode, start recording
 set(hObject,'UserData',true);
 set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
@@ -2275,19 +2319,44 @@ set(handles.speedUpButton,'Enable','off');
 set(handles.toneControlButton,'Enable','off');
 set(handles.voiceRemovalButton,'Enable','off');
 
+% set curPad to 0
+handles.curPad = 0;
+    
+% set startdelay to 1 second
+handles.timerText.StartDelay = 1;
+
+% get the duration for the recording
+tolTimeDataCell = get(handles.tolTimeText,'UserData');
+durationTime = tolTimeDataCell{2};
+% calculate the number of sample points
+totalPoints = handles.recordSample.sampleRate * durationTime;
+% initialize the array
+handles.recordSample.points = zeros(totalPoints,2);
+handles.recordSample.selectPeriod = [1 totalPoints];
+guidata(hObject,handles);   % update handles structure
+
+% plot the graph
+Plot(handles);
+
+% set data to blank
+lineHandle1 = get(handles.axes1,'Children');
+lineHandle2 = get(handles.axes2,'Children');
+set(lineHandle1, 'XData', [], 'YData', []);
+set(lineHandle2, 'XData', [], 'YData', []);
+set(handles.axes1,'UserData',[0 0]);            % reset the userdata for axes1
+set(handles.timerPlot,'UserData',[0 0]);        % reset the userdata for timerPlot
+
+SetPadColor(handles);   % change the color of the pads
+
 % set status bar
 set(handles.status,'String',...
         'Loop Recording Mode: Start by clicking one of the pad');
 
-% set curPad to 0
-handles.curPad = 0;
-    
 % start ticking
 handles.timerVal = tic;
-start(handles.timerText);   % stop the timer for text
+start(handles.timerText);   % start the timer for text
+start(handles.timerPlot);   % start the timer for plot
 guidata(hObject,handles);   % update handles structure
-
-SetPadColor(handles);   % change the color of the pads
 
 % --- Executes on button press in stopButton.
 function stopButton_Callback(hObject, ~, handles)
@@ -2297,6 +2366,7 @@ function stopButton_Callback(hObject, ~, handles)
 
 elapseT = toc(handles.timerVal);    % get the elapsed time of the last sample
 stop(handles.timerText);            % stop the timer for text
+stop(handles.timerPlot);            % stop the timer for plot
 clear sound;                        % stop playing
 ClearStatus(handles);               % clear status bar
 
@@ -2306,14 +2376,18 @@ format = tolTimeDataCell{1};
 % reset the curTimeText
 set(handles.curTimeText,'String',...
         string(duration([0 0 0],'Format',format)));
+% reset the userdata for axes1
+set(handles.axes1,'UserData',[0 0]);
+% reset the userdata for timerPlot
+set(handles.timerPlot,'UserData',[0 0]);
 
 % if the recording is playing, stop playing and reset
 if(get(handles.playRecordButton,'UserData'))   
     % disable stop button
     set(hObject,'Enable','off');
-    
+    set(handles.recordButton,'Enable','on');   % enable the record button
     % reset playing status
-    set(handles.playRecordButton,'UserData',[]);
+    set(handles.playRecordButton,'UserData',false);
     return;
 end
 
@@ -2355,14 +2429,9 @@ for i = 1:size(sampleIdx,1)
     record(sampleStartPoints(i):(sampleStartPoints(i) + sampleElapsePoints(i) - 1) , :) = samplePoints(1:sampleElapsePoints(i) , :);
 end
 
-% get the info for recording
-bars = str2double(get(handles.numBarsEdit,'String'));
-bpm = str2double(get(handles.bpmEdit,'String'));
-timeSigStr = cellstr(get(handles.timeSigEdit,'String'));
-timeSigStr = timeSigStr{get(handles.timeSigEdit,'Value')};
-
-% calculate the duration for the recording
-durationTime = CalTimeFromBPM(bars,timeSigStr,bpm);
+% get the duration for the recording
+tolTimeDataCell = get(handles.tolTimeText,'UserData');
+durationTime = tolTimeDataCell{2};
 totalPoints = rate * durationTime;
 
 % calculate how many rounds the recording has been through
@@ -2416,6 +2485,7 @@ set(handles.delayButton,'Enable','on');
 set(handles.speedUpButton,'Enable','on');
 set(handles.toneControlButton,'Enable','on');
 set(handles.voiceRemovalButton,'Enable','on');
+set(handles.chopButton,'Enable','on');
 
 % set status bar
 set(handles.status,'String','Successfully recorded');
@@ -2440,6 +2510,9 @@ set(handles.stopButton,'Enable','on');      % enable the stop button
 set(handles.recordButton,'Enable','off');   % disable the record button
 
 handles.timerText.StartDelay = 1;   % reset the start delay of the timer
+
+% plot the graph
+Plot(handles);
 
 % play the recording
 sound(handles.recordSample.points,handles.recordSample.sampleRate);
@@ -2585,7 +2658,7 @@ set(handles.curTimeText,'String',...
 % store the format & duration of the recording
 set(handles.tolTimeText,'UserData',{format,durationTime});
 
-function changeCurRecordTime(obj, ~, handles)
+function ChangeCurRecordTime(obj, ~, handles)
 % execute when timerText starts
 % change the current recording time
 %   obj: the handle to the timer object
@@ -2611,6 +2684,13 @@ if(get(handles.playRecordButton,'UserData'))     % if it is currently playing
         string(duration([0 0 curTime],'Format',format)));
     if(durationTime - curTime < 1)  % if there is less than 1 second
         stop(obj);  % stop the timer
+        set(handles.recordButton,'Enable','on');    % enable the record button
+        set(handles.stopButton,'Enable','off');     % disable the stop button
+        % reset playing status
+        set(handles.playRecordButton,'UserData',false);
+        % reset the current time
+        set(handles.curTimeText,'String',...
+            string(duration([0 0 0],'Format',format)));
         ClearStatus(handles);   % clear the status
     end
     return;
@@ -2626,11 +2706,101 @@ elseif(durationTime - curTime < 1)  % if there is less than 1 second
     pause(durationTime - curTime);  % pause for the remaining time
     set(handles.curTimeText,'String',...
         string(duration([0 0 0],'Format',format)));
+    obj.StartDelay = 1;     % reset startdelay
     start(obj); % restart timer
 else    % if there is more than 1 second
     set(handles.curTimeText,'String',...
         string(duration([0 0 curTime],'Format',format)));
 end
+
+function PlotCurRecord(obj, ~, handles)
+% execute when timerPlot starts
+% use animatedline to plot on the graph while recording
+%   obj: the handle to the timer object
+%   event: store the data of when the function is called
+%   handles: structure with handles and user data
+
+% get the latest handles structure
+handles = guidata(handles.main);
+
+% get the handles of the lines
+lineHandleL = get(handles.axes1,'Children');
+lineHandleR = get(handles.axes2,'Children');
+
+% obtain the xdata and ydata
+XDataL = get(lineHandleL, 'XData');
+YDataL = get(lineHandleL, 'YData');
+XDataR = get(lineHandleR, 'XData');
+YDataR = get(lineHandleR, 'YData');
+
+% get the period of the timer
+period = get(obj,'Period');
+
+% get the current time and current location
+curPlotData = get(handles.axes1,'UserData');
+curTime = curPlotData(1);
+curPlotLoc = curPlotData(2);
+
+% calculate the number of points that needs to be ploted
+points = period * handles.recordSample.sampleRate;
+
+% calculate the xdata that needs to be ploted
+XDataPlot = linspace(curTime, curTime+period, points);
+% change xdata
+XDataL(curPlotLoc+1:curPlotLoc+points) = XDataPlot;
+XDataR(curPlotLoc+1:curPlotLoc+points) = XDataPlot;
+
+% get the current pad
+curPad = handles.curPad;
+
+% get the previous sample the location
+preSamData = get(obj,'UserData');
+prePad = preSamData(1);
+curSamLoc = preSamData(2);
+
+% get the ydata that needs to be ploted
+if(curPad == 0 || isempty(handles.samples(curPad).points))  % if it's empty
+    YDataLPlot = zeros(1,points);
+    YDataRPlot = zeros(1,points);
+else    % if there is a sample in the selected pad
+    samplePoints = handles.samples(curPad).points;  % get the sample points
+    if(prePad == curPad)    % if it was the same sample, continue plotting
+        YDataLPlot = samplePoints(curSamLoc+1:curSamLoc+points,1);
+        YDataRPlot = samplePoints(curSamLoc+1:curSamLoc+points,2);
+        curSamLoc = curSamLoc + points;
+    else                    % if it changes to another sample, plot from beginning
+        YDataLPlot = samplePoints(1:points,1);
+        YDataRPlot = samplePoints(1:points,2);
+        prePad = curPad;
+        curSamLoc = points;
+    end
+end
+
+% change ydata
+YDataL(curPlotLoc+1:curPlotLoc+points) = YDataLPlot;
+YDataR(curPlotLoc+1:curPlotLoc+points) = YDataRPlot;
+
+% set the data of the lines
+set(lineHandleL, 'XData', XDataL, 'YData', YDataL);
+set(lineHandleR, 'XData', XDataR, 'YData', YDataR);
+
+% add the period to it
+curTime = curTime + period;
+curPlotLoc = curPlotLoc + points;
+
+% save the current time
+set(handles.axes1,'UserData',[curTime curPlotLoc]);
+
+% save the current pad
+set(obj,'UserData',[prePad curSamLoc]);
+
+
+
+
+
+
+
+
 
 
 
