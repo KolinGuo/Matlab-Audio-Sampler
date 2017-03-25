@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 18-Mar-2017 20:14:42
+% Last Modified by GUIDE v2.5 18-Mar-2017 22:30:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -51,6 +51,9 @@ function main_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to main (see VARARGIN)
 
+% start ticking, for record purpose
+tic;
+
 % Choose default command line output for main
 handles.output = hObject;
 
@@ -67,6 +70,9 @@ for i = 1:16
     handles.samples(i).origSample = handles.samples(i);     % store the original sample
 end
 
+% save a field for recording sample
+handles.recordSample = [];
+
 % Save the pad number of current selected sample
 handles.curPad = 0;
 
@@ -81,7 +87,10 @@ set(jRangeSlider, 'PaintTicks',true,...
         'StateChangedCallback',{@slider_StateChangedCallback,handles},...
         'MouseReleasedCallback',{@slider_MouseReleasedCallback,handles});
 handles.slider = jRangeSlider;
-    
+
+% save a field for timerVal
+handles.timerVal = [];
+
 % Update handles structure
 guidata(hObject, handles);
 
@@ -149,39 +158,89 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+% --- Executes during object creation, after setting all properties.
+function bpmEdit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to bpmEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes during object creation, after setting all properties.
+function timeSigEdit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to timeSigEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes during object creation, after setting all properties.
+function numBarsEdit_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to numBarsEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
 % --- Executes on button press in pad1.
 function pad1_Callback(hObject, eventdata, handles)
 % hObject    handle to pad1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 1
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,1);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,1);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,1);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,1)
-elseif(strcmp(get(handles.button1,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,1);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 1
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,1);
-    % If in Delete Mode, delete samples from pad 1
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,1);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 1);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 1);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button1,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [1, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(1).points,handles.samples(1).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 1
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,1);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,1);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,1);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,1)
+    elseif(strcmp(get(handles.button1,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,1);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 1
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,1);
+        % If in Delete Mode, delete samples from pad 1
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,1);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 1);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 1);
+        end
     end
 end
 
@@ -191,33 +250,47 @@ function pad2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 2
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,2);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,2);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,2);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,2)
-elseif(strcmp(get(handles.button2,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,2);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 2
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,2);
-    % If in Delete Mode, delete samples from pad 2
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,2);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 2);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 2);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button2,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [2, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(2).points,handles.samples(2).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 2
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,2);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,2);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,2);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,2)
+    elseif(strcmp(get(handles.button2,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,2);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 2
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,2);
+        % If in Delete Mode, delete samples from pad 2
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,2);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 2);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 2);
+        end
     end
 end
 
@@ -227,33 +300,47 @@ function pad3_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 3
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,3);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,3);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,3);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,3)
-elseif(strcmp(get(handles.button3,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,3);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 3
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,3);
-    % If in Delete Mode, delete samples from pad 3
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,3);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 3);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 3);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button3,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [3, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(3).points,handles.samples(3).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 3
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,3);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,3);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,3);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,3)
+    elseif(strcmp(get(handles.button3,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,3);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 3
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,3);
+        % If in Delete Mode, delete samples from pad 3
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,3);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 3);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 3);
+        end
     end
 end
 
@@ -263,33 +350,47 @@ function pad4_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 4
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,4);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,4);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,4);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,4)
-elseif(strcmp(get(handles.button4,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,4);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 4
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,4);
-    % If in Delete Mode, delete samples from pad 4
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,4);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 4);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 4);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button4,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [4, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(4).points,handles.samples(4).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 4
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,4);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,4);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,4);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,4)
+    elseif(strcmp(get(handles.button4,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,4);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 4
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,4);
+        % If in Delete Mode, delete samples from pad 4
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,4);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 4);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 4);
+        end
     end
 end
 
@@ -299,33 +400,47 @@ function pad5_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 5
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,8);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,8);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,5);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,5)
-elseif(strcmp(get(handles.button5,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,5);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 5
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,5);
-    % If in Delete Mode, delete samples from pad 5
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,5);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 5);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 5);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button5,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [5, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(5).points,handles.samples(5).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 5
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,5);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,5);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,5);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,5)
+    elseif(strcmp(get(handles.button5,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,5);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 5
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,5);
+        % If in Delete Mode, delete samples from pad 5
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,5);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 5);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 5);
+        end
     end
 end
 
@@ -335,33 +450,47 @@ function pad6_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 6
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,6);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,6);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,6);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,6)
-elseif(strcmp(get(handles.button6,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,6);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 6
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,6);
-    % If in Delete Mode, delete samples from pad 6
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,6);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 6);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 6);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button6,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [6, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(6).points,handles.samples(6).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 6
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,6);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,6);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,6);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,6)
+    elseif(strcmp(get(handles.button6,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,6);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 6
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,6);
+        % If in Delete Mode, delete samples from pad 6
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,6);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 6);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 6);
+        end
     end
 end
 
@@ -371,33 +500,47 @@ function pad7_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 7
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,7);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,7);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,7);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,7)
-elseif(strcmp(get(handles.button7,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,7);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 7
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,7);
-    % If in Delete Mode, delete samples from pad 7
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,7);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 7);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 7);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button7,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [7, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(7).points,handles.samples(7).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 7
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,7);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,7);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,7);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,7)
+    elseif(strcmp(get(handles.button7,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,7);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 7
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,7);
+        % If in Delete Mode, delete samples from pad 7
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,7);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 7);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 7);
+        end
     end
 end
 
@@ -407,33 +550,47 @@ function pad8_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 8
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,8);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,8);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,8);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,8)
-elseif(strcmp(get(handles.button8,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,8);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 8
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,8);
-    % If in Delete Mode, delete samples from pad 8
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,8);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 8);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 8);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button8,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [8, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(8).points,handles.samples(8).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 8
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,8);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,8);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,8);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,8)
+    elseif(strcmp(get(handles.button8,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,8);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 8
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,8);
+        % If in Delete Mode, delete samples from pad 8
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,8);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 8);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 8);
+        end
     end
 end
 
@@ -443,33 +600,47 @@ function pad9_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 9
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,9);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,9);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,9);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,9)
-elseif(strcmp(get(handles.button9,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,9);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 9
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,9);
-    % If in Delete Mode, delete samples from pad 9
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,9);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 9);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 9);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button9,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [9, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(9).points,handles.samples(9).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 9
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,9);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,9);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,9);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,9)
+    elseif(strcmp(get(handles.button9,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,9);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 9
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,9);
+        % If in Delete Mode, delete samples from pad 9
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,9);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 9);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 9);
+        end
     end
 end
 
@@ -479,33 +650,47 @@ function pad10_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 10
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,10);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,10);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,10);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,10)
-elseif(strcmp(get(handles.button10,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,10);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 10
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,10);
-    % If in Delete Mode, delete samples from pad 10
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,10);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 10);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 10);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button10,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [10, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(10).points,handles.samples(10).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 10
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,10);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,10);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,10);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,10)
+    elseif(strcmp(get(handles.button10,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,10);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 10
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,10);
+        % If in Delete Mode, delete samples from pad 10
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,10);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 10);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 10);
+        end
     end
 end
 
@@ -515,33 +700,47 @@ function pad11_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 11
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,11);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,11);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,11);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,11)
-elseif(strcmp(get(handles.button11,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,11);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 11
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,11);
-    % If in Delete Mode, delete samples from pad 11
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,11);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 11);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 11);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button11,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [11, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(11).points,handles.samples(11).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 11
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,11);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,11);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,11);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,11)
+    elseif(strcmp(get(handles.button11,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,11);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 11
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,11);
+        % If in Delete Mode, delete samples from pad 11
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,11);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 11);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 11);
+        end
     end
 end
 
@@ -551,33 +750,47 @@ function pad12_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 12
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,12);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,12);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,12);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,12)
-elseif(strcmp(get(handles.button12,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,12);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 12
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,12);
-    % If in Delete Mode, delete samples from pad 12
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,12);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 12);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 12);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button12,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [12, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(12).points,handles.samples(12).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 12
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,12);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,12);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,12);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,12)
+    elseif(strcmp(get(handles.button12,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,12);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 12
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,12);
+        % If in Delete Mode, delete samples from pad 12
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,12);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 12);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 12);
+        end
     end
 end
 
@@ -587,33 +800,47 @@ function pad13_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 13
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,13);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,13);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,13);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,13)
-elseif(strcmp(get(handles.button13,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,13);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 13
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,13);
-    % If in Delete Mode, delete samples from pad 13
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,13);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 13);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 13);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button13,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [13, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(13).points,handles.samples(13).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 13
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,13);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,13);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,13);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,13)
+    elseif(strcmp(get(handles.button13,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,13);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 13
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,13);
+        % If in Delete Mode, delete samples from pad 13
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,13);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 13);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 13);
+        end
     end
 end
 
@@ -623,33 +850,47 @@ function pad14_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 14
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,14);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,14);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,14);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,14)
-elseif(strcmp(get(handles.button14,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,14);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 14
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,14);
-    % If in Delete Mode, delete samples from pad 14
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,14);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 14);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 14);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button14,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [14, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(14).points,handles.samples(14).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 14
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,14);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,14);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,14);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,14)
+    elseif(strcmp(get(handles.button14,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,14);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 14
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,14);
+        % If in Delete Mode, delete samples from pad 14
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,14);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 14);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 14);
+        end
     end
 end
 
@@ -659,33 +900,47 @@ function pad15_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 15
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,15);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,15);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,15);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,15)
-elseif(strcmp(get(handles.button15,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,15);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 15
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,15);
-    % If in Delete Mode, delete samples from pad 15
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,15);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 15);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 15);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button15,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [15, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(15).points,handles.samples(15).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 15
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,15);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,15);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,15);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,15)
+    elseif(strcmp(get(handles.button15,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,15);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 15
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,15);
+        % If in Delete Mode, delete samples from pad 15
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,15);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 15);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 15);
+        end
     end
 end
 
@@ -695,33 +950,47 @@ function pad16_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% If in Load Mode, load samples into pad 16
-if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
-        LoadFileToPad(hObject,handles,16);
-    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
-        LoadBasicTone(hObject,handles,16);
-    end
-% If in Copy Mode
-elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
-    CopyFromPadToPad(hObject,handles,16);
-% If in Cut Mode
-elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
-    CutFromPadToPad(hObject,handles,16)
-elseif(strcmp(get(handles.button16,'Visible'),'off')) % if no sample
-    EmptyPadStatus(handles,16);
-else    % if there is a sample
-    % If in Save Mode, save samples from pad 16
-    if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
-        SaveFromPad(handles,16);
-    % If in Delete Mode, delete samples from pad 16
-    elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
-        DelFromPad(hObject,handles,16);
-    % Normal Play sound
-    else
-        SelectButton(hObject, handles, 16);
-        pause(.01);            % pause for a short time to allow status changes
-        PlayFromPad(handles, 16);
+if(get(handles.recordButton,'UserData') && strcmp(get(handles.button16,'Visible'),'on')) % if true, in record mode
+    t = toc(handles.timerVal);
+    clear sound;
+    % store the record
+    timeArr = get(handles.stopButton,'UserData');
+    timeArr(end,3) = t;
+    timeArr = [timeArr; [16, timeArr(end,2)+t, 0] ];
+    set(handles.stopButton,'UserData',timeArr);
+    % play the sound
+    sound(handles.samples(16).points,handles.samples(16).sampleRate);
+    handles.timerVal = tic;     % store tic
+    guidata(hObject,handles);   % update handles structure
+else % if not in record mode
+    % If in Load Mode, load samples into pad 16
+    if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
+        if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+            LoadFileToPad(hObject,handles,16);
+        elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+            LoadBasicTone(hObject,handles,16);
+        end
+    % If in Copy Mode
+    elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
+        CopyFromPadToPad(hObject,handles,16);
+    % If in Cut Mode
+    elseif(get(handles.cutButton,'Value') == get(handles.cutButton,'Max'))
+        CutFromPadToPad(hObject,handles,16)
+    elseif(strcmp(get(handles.button16,'Visible'),'off')) % if no sample
+        EmptyPadStatus(handles,16);
+    else    % if there is a sample
+        % If in Save Mode, save samples from pad 16
+        if(get(handles.saveButton,'Value') == get(handles.saveButton,'Max'))
+            SaveFromPad(handles,16);
+        % If in Delete Mode, delete samples from pad 16
+        elseif(get(handles.deleteButton,'Value') == get(handles.deleteButton,'Max'))
+            DelFromPad(hObject,handles,16);
+        % Normal Play sound
+        else
+            SelectButton(hObject, handles, 16);
+            pause(.01);            % pause for a short time to allow status changes
+            PlayFromPad(handles, 16);
+        end
     end
 end
 
@@ -1963,6 +2232,134 @@ clear sound;
 set(handles.status,'String','Successfully applied the effects');
 
 HideBusyStatus(handles);    % hide the 'Busy' status
+
+% --- Executes on button press in recordButton.
+function recordButton_Callback(hObject, eventdata, handles)
+% hObject    handle to recordButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+clear sound;
+% if in not record mode, start recording
+    set(hObject,'UserData',true);
+    set(handles.stopButton,'UserData',[0 0 0]);     % reset recording time
+    
+    % set status bar
+    
+    % start ticking
+    handles.timerVal = tic;
+    guidata(hObject,handles);   % update handles structure
+
+
+% --- Executes on button press in stopButton.
+function stopButton_Callback(hObject, eventdata, handles)
+% hObject    handle to stopButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+clear sound;
+t = toc(handles.timerVal);
+timeArr = get(handles.stopButton,'UserData');
+timeArr(end,3) = t;
+set(handles.stopButton,'UserData',timeArr);
+guidata(hObject,handles);
+
+bars = str2double(get(handles.numBarsEdit,'String'));
+bpm = str2double(get(handles.bpmEdit,'String'));
+
+timeSigStr = cellstr(get(handles.timeSigEdit,'String'));
+timeSigStr = timeSigStr{get(handles.timeSigEdit,'Value')};
+
+% calculate time value for the recording
+timeValue = time_value(bars,timeSigStr,bpm);
+totalPoints = 44100 * timeValue;
+
+
+% create an array to hold sample points
+finalRecord = zeros(totalPoints, 2);
+recordingSamplesInfo = get(handles.stopButton,'UserData');
+sampleInd = recordingSamplesInfo(2:end,1);
+sampleStartingTime = recordingSamplesInfo(2:end,2);
+sampleDuration = recordingSamplesInfo(2:end,3);
+
+sampleStartingPoints = fix(sampleStartingTime .* 44100);
+sampleDurationPoints = fix(sampleDuration .* 44100);
+
+totalRecordingPoints = sampleStartingPoints(end)+sampleDurationPoints(end);
+Record = zeros(totalRecordingPoints,2);
+
+for i = 1:size(sampleInd,1)
+    samplePoints = get(handles.samples(sampleInd(i)).points);
+    if (size(samplePoints,2) == 2)
+        Record(sampleStartingPoints(i):(sampleStartingPoints(i) + sampleDurationPoints(i)) , :) = samplePoints(1:sampleDurationPoints(i) , :);                     
+    else
+        newSamplePoints = [samplePoints,samplePoints];
+        Record(sampleStartingPoints(i):(sampleStartingPoints(i) + sampleDurationPoints(i)) , :) = newSamplePoints(1:sampleDurationPoints(i) , :);
+    end
+end
+
+Rounds = fix(totalRecordingPoints / totalPoints);
+numPointsLeft = totalRecordingPoints - Rounds * totalPoints;
+
+finalRecord = Record((Rounds-1) * totalPoints : Rounds * totalPoints , :);
+finalRecord(1:numPointsLeft , :) = Record((end-numPointsLeft):end , :);
+
+sound(finalRecord,44100);
+
+set(handles.recordButton,'UserData',false);     % stop recording
+
+handles.recordSample.points = finalRecord;
+handles.recordSample.sampleRate = 44100;
+% add more
+
+guidata(hObject, handles);  % update handles structure
+
+function bpmEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to bpmEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of bpmEdit as text
+%        str2double(get(hObject,'String')) returns contents of bpmEdit as a double
+
+% --- Executes on selection change in timeSigEdit.
+function timeSigEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to timeSigEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns timeSigEdit contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from timeSigEdit
+
+function numBarsEdit_Callback(hObject, eventdata, handles)
+% hObject    handle to numBarsEdit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of numBarsEdit as text
+%        str2double(get(hObject,'String')) returns contents of numBarsEdit as a double
+
+
+
+% --- Executes on button press in saveFileButton.
+function saveFileButton_Callback(hObject, eventdata, handles)
+% hObject    handle to saveFileButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+
+
+% --- Executes on button press in savePadButton.
+function savePadButton_Callback(hObject, eventdata, handles)
+% hObject    handle to savePadButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+
+
 
 function SetPadColor(handles)
 % Set the color of empty pad to red and others to green
