@@ -5,10 +5,9 @@ function outSample = Delay(sample)
 %   many zero to add before the sample array.
     outSample = sample;
     
-    % the number of samples points that need to be delayed
+    % the number of sample points that need to be delayed
     N = sample.delay / 1000 * sample.sampleRate;
     
-    for i = N + 1:size(sample.points,1)
-        outSample.points(i,:) = sample.points(i,:) + sample.points(i - N,:);
-    end
+    % create echo effect by adding sample points
+    outSample.points(N+1:end,:) = sample.points(N+1:end,:) + sample.points(1:end-N,:);
 end 

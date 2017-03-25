@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 18-Mar-2017 13:30:05
+% Last Modified by GUIDE v2.5 18-Mar-2017 20:14:42
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -69,6 +69,9 @@ end
 
 % Save the pad number of current selected sample
 handles.curPad = 0;
+
+% save a field for toneSample
+handles.toneSample = [];
 
 % Draw a java slider
 jRangeSlider = com.jidesoft.swing.RangeSlider(1,192000*10,1,192000*10);  % min,max,low,high
@@ -154,7 +157,11 @@ function pad1_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 1
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,1);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,1);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,1);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,1);
@@ -186,7 +193,11 @@ function pad2_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 2
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,2);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,2);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,2);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,2);
@@ -218,7 +229,11 @@ function pad3_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 3
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,3);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,3);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,3);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,3);
@@ -250,7 +265,11 @@ function pad4_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 4
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,4);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,4);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,4);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,4);
@@ -282,7 +301,11 @@ function pad5_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 5
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,5);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,8);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,8);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,5);
@@ -314,7 +337,11 @@ function pad6_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 6
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,6);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,6);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,6);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,6);
@@ -346,7 +373,11 @@ function pad7_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 7
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,7);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,7);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,7);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,7);
@@ -378,7 +409,11 @@ function pad8_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 8
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,8);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,8);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,8);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,8);
@@ -410,7 +445,11 @@ function pad9_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 9
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,9);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,9);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,9);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,9);
@@ -442,7 +481,11 @@ function pad10_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 10
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,10);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,10);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,10);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,10);
@@ -474,7 +517,11 @@ function pad11_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 11
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,11);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,11);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,11);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,11);
@@ -506,7 +553,11 @@ function pad12_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 12
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,12);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,12);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,12);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,12);
@@ -538,7 +589,11 @@ function pad13_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 13
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,13);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,13);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,13);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,13);
@@ -570,7 +625,11 @@ function pad14_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 14
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,14);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,14);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,14);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,14);
@@ -602,7 +661,11 @@ function pad15_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 15
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,15);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,15);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,15);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,15);
@@ -634,7 +697,11 @@ function pad16_Callback(hObject, eventdata, handles)
 
 % If in Load Mode, load samples into pad 16
 if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
-    LoadToPad(hObject,handles,16);
+    if(get(handles.loadFileButton,'Value') == get(handles.loadFileButton,'Max'))
+        LoadFileToPad(hObject,handles,16);
+    elseif(get(handles.basicToneButton,'Value') == get(handles.basicToneButton,'Max'))
+        LoadBasicTone(hObject,handles,16);
+    end
 % If in Copy Mode
 elseif(get(handles.copyButton,'Value') == get(handles.copyButton,'Max')) 
     CopyFromPadToPad(hObject,handles,16);
@@ -658,14 +725,14 @@ else    % if there is a sample
     end
 end
 
-function LoadToPad(hObject,handles,num)
+function LoadFileToPad(hObject,handles,num)
 % Load an audio sample into the corresponding pad
 %   hObject: handle to pad
 %   handles: structure with handles and user data
 %   num: the pad which the sample is loading into
 [pathname, filename] = GetLoadPath();   % get file path
 if filename == 0  % if user canceled to load
-    set(handles.status,'String','Load Mode: Cancel to load');
+    set(handles.status,'String','Load File Mode: Cancel to load');
 else
     ShowBusyStatus(handles);    % show the 'Busy' status
     pause(.0000001);            % pause for a short time to allow status changes
@@ -673,7 +740,41 @@ else
     guidata(hObject, handles);  % update handles
     HideBusyStatus(handles);    % hide the 'Busy' status
     SetPadColor(handles);       % refresh the color of pads
-    statusStr = sprintf('Load Mode: Successfully load ''%s'' into pad %d',filename,num);
+    statusStr = sprintf('Load File Mode: Successfully load ''%s'' into pad %d',filename,num);
+    set(handles.status,'String',statusStr);
+    ShowButton(handles, num);
+    if(handles.curPad == num)   % if load into current selected pad, set curPad to 0
+        handles.curPad = 0;
+        guidata(hObject,handles);   % update handles
+    end
+    if(handles.curPad == 0)     % if there is no other sample
+        SelectButton(hObject,handles,num);
+    end
+end
+
+function LoadBasicTone(hObject,handles,num)
+% Load a basic tone using a piano keyboard into the corresponding pad
+%   hObject: handle to pad
+%   handles: structure with handles and user data
+%   num: the pad which the basic tone is loading into
+
+% Open the piano keyboard and set the 'main' GUI to wait for it to close
+fKey = pianoKeyboard;
+uiwait(fKey);
+% Retrieve latest handles structure
+handles = guidata(handles.main);
+
+if isempty(handles.toneSample)  % if user canceled to load
+    set(handles.status,'String','Basic Tone Mode: Cancel to load');
+else
+    ShowBusyStatus(handles);    % show the 'Busy' status
+    pause(.0000001);            % pause for a short time to allow status changes
+    handles.samples(num) = handles.toneSample;  % Load to the selected pad
+    handles.toneSample = [];    % set toneSample to blank
+    guidata(hObject, handles);  % update handles
+    HideBusyStatus(handles);    % hide the 'Busy' status
+    SetPadColor(handles);       % refresh the color of pads
+    statusStr = sprintf('Basic Tone Mode: Successfully load a basic tone into pad %d',num);
     set(handles.status,'String',statusStr);
     ShowButton(handles, num);
     if(handles.curPad == num)   % if load into current selected pad, set curPad to 0
@@ -1019,22 +1120,62 @@ function loadButton_Callback(hObject, eventdata, handles)
 button_state = get(hObject,'Value');
 if button_state == get(hObject,'Max')
     set(handles.status,'String',...
-        'Load Mode: Click on the pads to load your samples and reclick ''Load'' to quit');
-    set(handles.loadButton,'TooltipString','Reclick to return');
+        'Load File Mode: Click on the pads to load your samples and click ''Exit'' to quit');
+    set(handles.loadButton,'Visible','off');
     set(handles.saveButton,'Visible','off');
     set(handles.copyButton,'Visible','off');
     set(handles.cutButton,'Visible','off');
     set(handles.deleteButton,'Visible','off');
+    
+    set(handles.loadFileButton,'Visible','on','Value',get(handles.loadFileButton,'Max'));
+    set(handles.basicToneButton,'Visible','on');
+    set(handles.exitLoadButton,'Visible','on');
+    
     SetPadColor(handles);
-elseif button_state == get(hObject,'Min')
-    set(handles.loadButton,'TooltipString','');
+end
+
+% --- Executes on button press in loadFileButton.
+function loadFileButton_Callback(hObject, eventdata, handles)
+% hObject    handle to loadFileButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of loadFileButton
+set(handles.loadButton,'Value',get(handles.loadButton,'Max'));
+set(handles.status,'String',...
+        'Load File Mode: Click on the pads to load your samples and click ''Exit'' to quit');
+    
+% --- Executes on button press in basicToneButton.
+function basicToneButton_Callback(hObject, eventdata, handles)
+% hObject    handle to basicToneButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of basicToneButton
+set(handles.basicToneButton,'Value',get(handles.basicToneButton,'Max'));
+set(handles.status,'String',...
+        'Basic Tone Mode: Click on the pads to load from a piano keyboard and click ''Exit'' to quit');
+    
+% --- Executes on button press in exitLoadButton.
+function exitLoadButton_Callback(hObject, eventdata, handles)
+% hObject    handle to exitLoadButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of exitLoadButton
+    % hide the components
+    set(handles.loadFileButton,'Visible','off');
+    set(handles.basicToneButton,'Visible','off');
+    set(handles.exitLoadButton,'Visible','off');
+
+    % show the five basic functionalities
+    set(handles.loadButton,'Visible','on','Value',get(handles.loadButton,'Min'));
     set(handles.saveButton,'Visible','on');
     set(handles.copyButton,'Visible','on');
     set(handles.cutButton,'Visible','on');
     set(handles.deleteButton,'Visible','on');
     ResetPadColor(handles);
     ClearStatus(handles);
-end
 
 % --- Executes on button press in saveButton.
 function saveButton_Callback(hObject, eventdata, handles)
@@ -1170,7 +1311,9 @@ ShowBusyStatus(handles);    % show the 'Busy' status
 pause(.0000001);            % pause for a short time to allow status changes
 if(size(handles.samples(num).points,2) == 1) % if the sample is mono
     set(handles.axes1,'Visible','on');
+    set(handles.leftChannelText,'Visible','off');
     set(handles.axes2,'Visible','off');
+    set(handles.rightChannelText,'Visible','off');
     
     WavePlot(handles.axes1, handles.samples(num).points, handles.samples(num).sampleRate);
     ChangePlotXAxisLabel(handles.axes1, handles);
@@ -1183,6 +1326,8 @@ else % if the sample is stereo
     
     WavePlot(handles.axes1, handles.samples(num).points(:,1), handles.samples(num).sampleRate);
     WavePlot(handles.axes2, handles.samples(num).points(:,2), handles.samples(num).sampleRate);
+    set(handles.leftChannelText,'Visible','on');
+    set(handles.rightChannelText,'Visible','on');
     ChangePlotXAxisLabel(handles.axes1, handles);
     ChangePlotXAxisLabel(handles.axes2, handles);
     set(handles.axes1,'XAxisLocation','top',...
@@ -1653,10 +1798,10 @@ function toneControlButton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 curPad = handles.curPad;    % get current pad
-filterGain = handles.samples(curPad).filterGain;  % get the gain value
 if(curPad == 0)     % if there is no sample
     NoSampleStatus(handles);
 else    % if there is a sample selected
+    filterGain = handles.samples(curPad).filterGain;  % get the gain value
     % hide all component
     set(handles.reversalButton,'Visible','off');
     set(handles.delayButton,'Visible','off');
@@ -1890,7 +2035,9 @@ if(i == 16 && strcmp(get(handles.button16,'Visible'), 'off'))
     cla(handles.axes1);
     cla(handles.axes2);
     set(handles.axes1,'Visible','off');
+    set(handles.leftChannelText,'Visible','off');
     set(handles.axes2,'Visible','off');
+    set(handles.rightChannelText,'Visible','off');
     set(handles.slider,'Visible',0);
     set(handles.chopStartStaticText,'Visible','off');
     set(handles.chopStartEditText,'Visible','off');
