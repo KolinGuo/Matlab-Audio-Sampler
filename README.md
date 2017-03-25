@@ -1,2 +1,2 @@
 # Matlab-Audio-Sampler
-A Matlab audio sampler by α·UMi
+A Matlab group project for ENG6 @ UC-Davis
