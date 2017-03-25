@@ -65,7 +65,7 @@ end
 handles.curPad = 0;
 
 % Draw a java slider
-jRangeSlider = com.jidesoft.swing.RangeSlider(0,192000*10,0,192000*10);  % min,max,low,high
+jRangeSlider = com.jidesoft.swing.RangeSlider(1,192000*10,1,192000*10);  % min,max,low,high
 jRangeSlider = javacomponent(jRangeSlider, [174,680,939,25], hObject);
 set(jRangeSlider, 'PaintTicks',true,...
         'Visible',0, 'Focusable',0,'SnapToTicks',0,...
@@ -630,6 +630,10 @@ else
     statusStr = sprintf('Load Mode: Successfully load ''%s'' into pad %d',filename,num);
     set(handles.status,'String',statusStr);
     ShowButton(handles, num);
+    if(handles.curPad == num)   % if load into current selected pad, set curPad to 0
+        handles.curPad = 0;
+        guidata(hObject,handles);   % update handles
+    end
     if(handles.curPad == 0)     % if there is no other sample
         SelectButton(hObject,handles,num);
     end
@@ -677,8 +681,13 @@ else    % if it was the second click, copy the sample and reset color
     HideBusyStatus(handles);    % hide the 'Busy' status
     SetPadColor(handles);   % refresh color
     ShowButton(handles,num);
-    if(copyFromPad == handles.curPad)
-        SelectButton(hObject, handles, num);  % select the pad
+    if(handles.curPad == num && copyFromPad ~= num) % if it's copying from another pad to current pad
+        handles.curPad = 0;
+        guidata(hObject, handles);
+        SelectButton(hObject, handles, num);
+    end
+    if(copyFromPad == handles.curPad) % if it's copying from current pad
+        SelectButton(hObject, handles, num);  % select the copy-to pad
     end
     statusStr = sprintf('Copy Mode: Successfully copy from pad %d to pad %d',copyFromPad,num);   % show status
     if(num == copyFromPad)   % Add A Joke
@@ -718,7 +727,12 @@ else    % if it was the second click, copy the sample, delete the original and r
     HideBusyStatus(handles);    % hide the 'Busy' status
     HideButton(handles, cutFromPad);  % hide the button of original pad
     ShowButton(handles,num);    % show the button of new pad
-    if(cutFromPad == handles.curPad)
+    if(handles.curPad == num && cutFromPad ~= num) % if it's cutting from another pad to current pad
+        handles.curPad = 0;
+        guidata(hObject, handles);
+        SelectButton(hObject, handles, num);
+    end
+    if(cutFromPad == handles.curPad) % if it's cutting from current pad
         SelectButton(hObject, handles, num);  % select the cut-to pad
     end
     SetPadColor(handles);   % refresh color
@@ -1104,7 +1118,7 @@ ChangeChopEditText(handles);
 period = handles.samples(num).selectPeriod;
 duration = size(handles.samples(num).points,1);
 % set the slider to current property
-set(handles.slider,'Minimum',0,'Maximum',duration,...
+set(handles.slider,'Minimum',1,'Maximum',duration,...
             'LowValue',period(1),'HighValue',period(2));
 
 % set slider and chopping visible
@@ -1155,7 +1169,7 @@ function slider_StateChangedCallback(hObject, eventdata, handles)
 % handles    structure with handles and user data
 % Update handles structure
 % guidata(handles.main,handles);
-
+ClearStatus(handles);
 % Retrieve Latest handles structure
 handles = guidata(handles.main);
 
@@ -1215,6 +1229,9 @@ if(~isempty(seconds)) % if the format is correct
     elseif(startTime > handles.samples(num).selectPeriod(2)) % if the start time > end time
         set(handles.status,'String','Error: Start time should not be larger than end time');
     else
+        if(startTime == 0)  % if it's the first sample
+            startTime = 1;
+        end
         handles.samples(num).selectPeriod(1) = startTime;
         % Update handles structure
         guidata(hObject,handles);
@@ -1252,6 +1269,9 @@ if(~isempty(seconds)) % if the format is correct
     elseif(endTime < handles.samples(num).selectPeriod(1)) % if the start time < end time
         set(handles.status,'String','Error: End time should not be smaller than start time');
     else
+        if(endTime == 0)  % if it's the first sample
+            endTime = 1;
+        end
         handles.samples(num).selectPeriod(2) = endTime;
         % Update handles structure
         guidata(hObject,handles);
@@ -1299,9 +1319,12 @@ num = handles.curPad;   % get the current pad
 startSample = handles.samples(num).selectPeriod(1);
 endSample = handles.samples(num).selectPeriod(2);
 handles.samples(num).points = handles.samples(num).points(startSample:endSample,:);
-handles.samples(num).selectPeriod = [0 size(handles.samples(num).points,1)];
+handles.samples(num).selectPeriod = [1 size(handles.samples(num).points,1)];
 % Update handles structure
 guidata(hObject,handles);
+% Show status
+statusStr = sprintf('Successfully chopped pad %d',num);
+set(handles.status,'String',statusStr);
 Plot(handles);
 HideBusyStatus(handles);    % hide the 'Busy' status
 
@@ -1400,19 +1423,22 @@ function SelectButton(hObject, handles, num)
 % Select the button of the corresponding pad
 str = ['button',num2str(num)];
 set(handles.(str),'Value',get(handles.(str),'Max'));
+% if current pad is 0, clear the sound;
 % if the current pad is going to be selected or Copy Mode or Cut Mode,
 % continue to play;
 % otherwise, stop playing
-if(~(handles.curPad == num || ...
+if(handles.curPad == 0 || ~(handles.curPad == num || ...
         get(handles.copyButton,'Value') == get(handles.copyButton,'Max') ||...
         get(handles.cutButton,'Value') == get(handles.cutButton,'Max')))
     clear sound;
 end
+copyCurPad = handles.curPad;
 handles.curPad = num;
 guidata(hObject, handles);
+% if current pad is 0, plot the graph;
 % if it's in Copy Mode or Cut Mode, don't plot the gragh;
 % otherwise, plot the graph
-if(~(get(handles.copyButton,'Value') == get(handles.copyButton,'Max') ||...
+if(copyCurPad == 0 || ~(get(handles.copyButton,'Value') == get(handles.copyButton,'Max') ||...
         get(handles.cutButton,'Value') == get(handles.cutButton,'Max')))
     Plot(handles);
 end
@@ -1433,8 +1459,20 @@ for i = 1:16
 end
 % if there is no loaded pad
 if(i == 16 && strcmp(get(handles.button16,'Visible'), 'off'))
+    clear sound;            % stop playing current pad
     handles.curPad = 0;
-    guidata(hObject, handles);
+    guidata(hObject, handles);  % update handles
+    % hide the graph and the chopping seletion
+    cla(handles.axes1);
+    cla(handles.axes2);
+    set(handles.axes1,'Visible','off');
+    set(handles.axes2,'Visible','off');
+    set(handles.slider,'Visible',0);
+    set(handles.chopStartStaticText,'Visible','off');
+    set(handles.chopStartEditText,'Visible','off');
+    set(handles.chopEndStaticText,'Visible','off');
+    set(handles.chopEndEditText,'Visible','off');
+    set(handles.chopButton,'Visible','off');
 end
 
 function SelectStatus(handles,num)

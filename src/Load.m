@@ -11,6 +11,6 @@ function [ outSample ] = Load(filePath)
         [samplePoints, sampleRate] = audioread(filePath);
         outSample.points = samplePoints;
         outSample.sampleRate = sampleRate;
-        outSample.selectPeriod = [0 size(samplePoints,1)];
+        outSample.selectPeriod = [1 size(samplePoints,1)];
     end
 end
