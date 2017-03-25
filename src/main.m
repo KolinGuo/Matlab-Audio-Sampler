@@ -107,11 +107,15 @@ handles.timerPlot = timerPlot;
 % Update handles structure
 guidata(hObject, handles);
 
-function main_DeleteFcn(~, ~, ~)
+function main_DeleteFcn(~, ~, handles)
 % hObject    handle to main (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 clear sound;    % stop playing when the GUI is closed
+stop(handles.timerText);    % stop the timerText object
+stop(handles.timerPlot);    % stop the timerText object
+delete(handles.timerText);  % delete the timerText object
+delete(handles.timerPlot);  % delete the timerPlot object
 
 % --- Outputs from this function are returned to the command line.
 function varargout = main_OutputFcn(~, ~, handles) 
@@ -242,6 +246,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,1);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 1);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 1);
@@ -284,6 +290,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,2);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 2);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 2);
@@ -326,6 +334,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,3);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 3);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 3);
@@ -368,6 +378,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,4);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 4);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 4);
@@ -410,6 +422,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,5);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 5);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 5);
@@ -452,6 +466,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,6);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 6);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 6);
@@ -494,6 +510,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,7);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 7);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 7);
@@ -536,6 +554,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,8);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 8);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 8);
@@ -578,6 +598,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,9);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 9);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 9);
@@ -620,6 +642,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,10);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 10);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 10);
@@ -662,6 +686,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,11);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 11);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 11);
@@ -704,6 +730,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,12);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 12);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 12);
@@ -746,6 +774,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,13);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 13);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 13);
@@ -788,6 +818,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,14);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 14);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 14);
@@ -830,6 +862,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,15);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 15);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 15);
@@ -872,6 +906,8 @@ else % if not in record mode
             DelFromPad(hObject,handles,16);
         % Normal Play sound
         else
+            % stop playing if the recordSample is currently playing
+            stopButton_Callback(handles.stopButton, NaN, handles);
             SelectButton(hObject, handles, 16);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 16);
@@ -1105,7 +1141,8 @@ points = fix(t * rate);                     % convert time to sample points
 curTime = get(handles.curTimeText,'UserData');
 curTime = curTime + t;  % add the elapsed time
 handles.timerText.StartDelay = 1 - rem(curTime,1);  % set delay for next second
-handles.timerPlot.StartDelay = 0.5 - rem(curTime,0.5);% set delay for next plot period
+plotPeriod = handles.timerPlot.Period;
+handles.timerPlot.StartDelay = plotPeriod - rem(curTime,plotPeriod);    % set delay for next plot period
 set(handles.curTimeText,'UserData',curTime);    % store the current time
 
 % store the record
@@ -1687,7 +1724,7 @@ endTime = sample.selectPeriod(2)/sampleRate;     % get end time in sec
 xtick = ceil(startTime*factor)/factor + interval.* [0:14];
 xticklabel = cell(1,15);
 for i = 1:15
-    if(xtick(i) > 3600)
+    if(xtick(i) > 3600 || abs(endTime - 3600) < 0.1)
         xticklabel{i} = string(duration([0 0 xtick(i)],'Format',['hh:',format]));
     else
         xticklabel{i} = string(duration([0 0 xtick(i)],'Format',format));
@@ -1877,22 +1914,18 @@ num = handles.curPad;   % get the current pad
 sampleRate = handles.samples(num).sampleRate;   % get the current sample rate
 startTime = handles.samples(num).selectPeriod(1)/sampleRate;   % get start time in sec
 endTime = handles.samples(num).selectPeriod(2)/sampleRate;     % get end time in sec
+
+% change time format if longer than 1 hour
+if(endTime > 3600 || abs(endTime - 3600) < 0.1)
+    format = ['hh:',format];
+end
+
 % change start time edit text
-if(startTime > 3600)
-    set(handles.chopStartEditText,'String',...
-        string(duration([0 0 startTime],'Format',['hh:',format])));
-else
-    set(handles.chopStartEditText,'String',...
+set(handles.chopStartEditText,'String',...
         string(duration([0 0 startTime],'Format',format)));
-end
 % change end time edit text
-if(endTime > 3600)
-    set(handles.chopEndEditText,'String',...
-        string(duration([0 0 endTime],'Format',['hh:',format])));
-else
-    set(handles.chopEndEditText,'String',...
+set(handles.chopEndEditText,'String',...
         string(duration([0 0 endTime],'Format',format)));
-end
 
 function [interval,factor,format] = GetTimeFormat(handles)
 % Calculate the interval and format for time
@@ -2293,7 +2326,24 @@ function recordButton_Callback(hObject, ~, handles)
 
 clear sound;
 
-% if in not record mode, start recording
+for i = 1:16
+    if(~isempty(handles.samples(i).points))     % if there is a sample
+        break;
+    end
+end
+
+if(i == 16 && isempty(handles.samples(16).points))     % if there is no sample in the pads
+    NoSampleStatus(handles);
+    return;
+end
+
+if(get(handles.recordButton,'UserData'))    % if in record mode
+    % reset timer
+    stop(handles.timerText);
+    stop(handles.timerPlot);
+end
+
+% start recording
 set(hObject,'UserData',true);
 set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
 set(handles.curTimeText,'UserData',0);          % reset recording starting time
@@ -2327,6 +2377,7 @@ handles.timerText.StartDelay = 1;
 
 % get the duration for the recording
 tolTimeDataCell = get(handles.tolTimeText,'UserData');
+format = tolTimeDataCell{1};
 durationTime = tolTimeDataCell{2};
 % calculate the number of sample points
 totalPoints = handles.recordSample.sampleRate * durationTime;
@@ -2344,7 +2395,10 @@ lineHandle2 = get(handles.axes2,'Children');
 set(lineHandle1, 'XData', [], 'YData', []);
 set(lineHandle2, 'XData', [], 'YData', []);
 set(handles.axes1,'UserData',[0 0]);            % reset the userdata for axes1
-set(handles.timerPlot,'UserData',[0 0]);        % reset the userdata for timerPlot
+set(handles.curTimeText,'String',...
+            string(duration([0 0 0],'Format',format))); % reset the current time
+set(handles.timerText,'StartDelay',1);     % reset timerText
+set(handles.timerPlot,'StartDelay',0,'UserData',[0 0]);     % reset timerPlot
 
 SetPadColor(handles);   % change the color of the pads
 
@@ -2425,8 +2479,18 @@ for i = 1:size(sampleIdx,1)
         end
     end
     
-    % paste the data
-    record(sampleStartPoints(i):(sampleStartPoints(i) + sampleElapsePoints(i) - 1) , :) = samplePoints(1:sampleElapsePoints(i) , :);
+    % if the sample is shorter than its elapsed time
+    if(size(samplePoints,1) < sampleElapsePoints(i))
+        sampleSize = size(samplePoints,1);
+        % paste all the samplePoints
+        record(sampleStartPoints(i):(sampleStartPoints(i) + sampleSize - 1), :) = samplePoints(1:sampleSize, :);
+        % set the rest to blank
+        record((sampleStartPoints(i) + sampleSize):(sampleStartPoints(i) + sampleElapsePoints(i) - 1), :) = ...
+                zeros(sampleElapsePoints(i) - sampleSize, 2);
+    else    % if the sample has enough length
+        % paste the data
+        record(sampleStartPoints(i):(sampleStartPoints(i) + sampleElapsePoints(i) - 1), :) = samplePoints(1:sampleElapsePoints(i), :);
+    end
 end
 
 % get the duration for the recording
@@ -2450,16 +2514,20 @@ end
 % replace the points that are left behind in the last round
 finalRecord(1:numPointsLeft , :) = record((end-numPointsLeft + 1):end , :);
 
-% reset loop recording mode
-set(handles.recordButton,'UserData',false);     % stop recording
-set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
-set(handles.curTimeText,'UserData',0);          % reset recording starting time
-
 % save the recording to handles
 handles.recordSample.points = finalRecord;
 handles.recordSample.selectPeriod = [1 size(finalRecord,1)];
 
-guidata(hObject, handles);  % update handles structure
+% update handles structure
+guidata(hObject, handles);
+
+% plot the graph
+Plot(handles);
+
+% reset loop recording mode
+set(handles.recordButton,'UserData',false);     % stop recording
+set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
+set(handles.curTimeText,'UserData',0);          % reset recording starting time
 
 % disable the stop button
 set(handles.stopButton,'Enable','off');
@@ -2573,11 +2641,11 @@ ChangeTolTimeText(handles);
 
 % --- Executes on selection change in timeSigEdit.
 function timeSigEdit_Callback(~, ~, handles)
-% hObject    handle to timeSigEdit (see GCBO)
+% hObject    handle to bpmEdit (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% change the tolTimeText text when time signature is changed
+% change the tolTimeText text when bpm is changed
 ChangeTolTimeText(handles);
 
 function numBarsEdit_Callback(~, ~, handles)
@@ -2596,8 +2664,8 @@ ClearStatus(handles);   % clear status bar
 % get the info for recording
 bars = str2double(get(handles.numBarsEdit,'String'));
 bpm = str2double(get(handles.bpmEdit,'String'));
-timeSigStr = cellstr(get(handles.timeSigEdit,'String'));
-timeSigStr = timeSigStr{get(handles.timeSigEdit,'Value')};
+timeSigStrCell = cellstr(get(handles.timeSigEdit,'String'));
+timeSigStr = timeSigStrCell{get(handles.timeSigEdit,'Value')};
 
 % check '# of bars' format
 if(isnan(bars) || ~isreal(bars)) % if it's not a real number
@@ -2605,18 +2673,13 @@ if(isnan(bars) || ~isreal(bars)) % if it's not a real number
     set(handles.status,'String','Error: Wrong format of ''# of bars''');
     % reset the numBarsEdit
     set(handles.numBarsEdit,'String',get(handles.numBarsEdit,'UserData'));
-    % reset the variable bars
-    bars = str2double(get(handles.numBarsEdit,'UserData'));
+    return;
 elseif(bars <= 0)   % if it's not a positive number
     % show error status
     set(handles.status,'String','Error: ''# of bars'' should be positive');
     % reset the numBarsEdit
     set(handles.numBarsEdit,'String',get(handles.numBarsEdit,'UserData'));
-    % reset the variable bars
-    bars = str2double(get(handles.numBarsEdit,'UserData'));
-else    % if the format is correct
-    % save the current string
-    set(handles.numBarsEdit,'UserData',get(handles.numBarsEdit,'String'));
+    return;
 end
 
 % check 'BPM' format
@@ -2625,25 +2688,52 @@ if(isnan(bpm) || ~isreal(bpm)) % if it's not a real number
     set(handles.status,'String','Error: Wrong format of ''BPM''');
     % reset the numBarsEdit
     set(handles.bpmEdit,'String',get(handles.bpmEdit,'UserData'));
-    % reset the variable bpm
-    bpm = str2double(get(handles.bpmEdit,'UserData'));
+    return;
 elseif(bpm <= 0)   % if it's not a positive number
     % show error status
     set(handles.status,'String','Error: ''BPM'' should be positive');
     % reset the numBarsEdit
     set(handles.bpmEdit,'String',get(handles.bpmEdit,'UserData'));
-    % reset the variable bpm
-    bpm = str2double(get(handles.bpmEdit,'UserData'));
-else    % if the format is correct
-    % save the current string
-    set(handles.bpmEdit,'UserData',get(handles.bpmEdit,'String'));
+    return;
 end
 
 % calculate the duration for the recording
 durationTime = CalTimeFromBPM(bars,timeSigStr,bpm);
 
+% if the recording time is too long, appear warning or error
+if(durationTime > 5400)
+    errordlg({'Error: The current recording time is longer than 1 hour and 30 minutes.',...
+        'Cannot support such a long recording time.',...
+        'Will return to the previous recording time.'},...
+        'Recording Time Is Too Long','modal');
+    % reset the data
+    set(handles.numBarsEdit,'String',get(handles.numBarsEdit,'UserData'));
+    set(handles.timeSigEdit,'Value',get(handles.timeSigEdit,'UserData'));
+    set(handles.bpmEdit,'String',get(handles.bpmEdit,'UserData'));
+    
+    bars = str2double(get(handles.numBarsEdit,'String'));
+    timeSigStr = timeSigStrCell{get(handles.timeSigEdit,'Value')};
+    bpm = str2double(get(handles.bpmEdit,'String'));
+    
+    % calculate the duration for the recording
+    durationTime = CalTimeFromBPM(bars,timeSigStr,bpm);
+elseif(durationTime > 1800 || abs(durationTime - 1800) < 0.1)
+    warndlg({'Warning: The current recording time is longer than 30 minutes.',...
+        'May result in longer execution time or out of memory.'},...
+        'Recording Time May Be Too Long','modal');
+    % save the current string
+    set(handles.numBarsEdit,'UserData',get(handles.numBarsEdit,'String'));
+    set(handles.timeSigEdit,'UserData',get(handles.timeSigEdit,'Value'));
+    set(handles.bpmEdit,'UserData',get(handles.bpmEdit,'String'));
+else
+    % save the current string
+    set(handles.numBarsEdit,'UserData',get(handles.numBarsEdit,'String'));
+    set(handles.timeSigEdit,'UserData',get(handles.timeSigEdit,'Value'));
+    set(handles.bpmEdit,'UserData',get(handles.bpmEdit,'String'));
+end
+
 % choose the correct format
-if(durationTime > 3600)
+if(durationTime > 3600 || abs(durationTime - 3600) < 0.1)
     format = 'hh:mm:ss';
 else
     format = 'mm:ss';
@@ -2741,14 +2831,8 @@ curPlotData = get(handles.axes1,'UserData');
 curTime = curPlotData(1);
 curPlotLoc = curPlotData(2);
 
-% calculate the number of points that needs to be ploted
+% calculate the number of points that needs to be plotted
 points = period * handles.recordSample.sampleRate;
-
-% calculate the xdata that needs to be ploted
-XDataPlot = linspace(curTime, curTime+period, points);
-% change xdata
-XDataL(curPlotLoc+1:curPlotLoc+points) = XDataPlot;
-XDataR(curPlotLoc+1:curPlotLoc+points) = XDataPlot;
 
 % get the current pad
 curPad = handles.curPad;
@@ -2758,23 +2842,83 @@ preSamData = get(obj,'UserData');
 prePad = preSamData(1);
 curSamLoc = preSamData(2);
 
+% get the durationTime
+tolTimeDataCell = get(handles.tolTimeText,'UserData');
+durationTime = tolTimeDataCell{2};
+
+% loop plotting
+if(durationTime == curTime)     % if it's exactly at the end
+    curTime = 0;
+    curPlotLoc = 0;
+elseif(durationTime - curTime < period)  % if there is less than the plotting period
+    stop(obj);  % stop timer
+    pause(durationTime - curTime);  % pause for the remaining time
+    curTime = 0;
+    curPlotLoc = 0;
+    obj.StartDelay = 0;     % reset startdelay
+    start(obj); % restart timer
+end
+
+% calculate the xdata that needs to be plotted
+XDataPlot = linspace(curTime, curTime+period, points);
+
 % get the ydata that needs to be ploted
 if(curPad == 0 || isempty(handles.samples(curPad).points))  % if it's empty
     YDataLPlot = zeros(1,points);
     YDataRPlot = zeros(1,points);
+    prePad = curPad;
+    curSamLoc = 0;
 else    % if there is a sample in the selected pad
     samplePoints = handles.samples(curPad).points;  % get the sample points
+    if(size(samplePoints,2) == 1)   % if the sample is mono
+        % change it to stereo by duplicating the channel
+        samplePoints = [samplePoints,samplePoints];
+    end
     if(prePad == curPad)    % if it was the same sample, continue plotting
-        YDataLPlot = samplePoints(curSamLoc+1:curSamLoc+points,1);
-        YDataRPlot = samplePoints(curSamLoc+1:curSamLoc+points,2);
+        % if the sample is shorter than the start point that needs to be plotted
+        if(size(samplePoints,1) < curSamLoc+1)
+            % set the plot data to blank
+            YDataLPlot = zeros(1,points);
+            YDataRPlot = zeros(1,points);
+            
+            handles.curPad = 0;     % reset the currentPad
+            guidata(handles.main,handles);  % update the handles structure
+        % if the sample is shorter than the end point that needs to be plotted
+        elseif(size(samplePoints,1) < curSamLoc+points)
+            sampleSize = size(samplePoints,1);
+            % paste all the sample points
+            YDataLPlot(1:sampleSize-curSamLoc) = samplePoints(curSamLoc+1:sampleSize,1);
+            YDataRPlot(1:sampleSize-curSamLoc) = samplePoints(curSamLoc+1:sampleSize,2);
+            % set the rest to blank
+            YDataLPlot(sampleSize-curSamLoc+1:points) = zeros(1,points-sampleSize+curSamLoc);
+            YDataRPlot(sampleSize-curSamLoc+1:points) = zeros(1,points-sampleSize+curSamLoc);
+        else    % if the sample has enough length
+            YDataLPlot = samplePoints(curSamLoc+1:curSamLoc+points,1);
+            YDataRPlot = samplePoints(curSamLoc+1:curSamLoc+points,2);
+        end
         curSamLoc = curSamLoc + points;
     else                    % if it changes to another sample, plot from beginning
-        YDataLPlot = samplePoints(1:points,1);
-        YDataRPlot = samplePoints(1:points,2);
+        % if the sample is shorter than the number of points that needs to be plotted
+        if(size(samplePoints,1) < points)
+            sampleSize = size(samplePoints,1);
+            % paste all the sample points
+            YDataLPlot(1:sampleSize) = samplePoints(1:sampleSize,1);
+            YDataRPlot(1:sampleSize) = samplePoints(1:sampleSize,2);
+            % set the rest to blank
+            YDataLPlot(sampleSize+1:points) = zeros(1,points-sampleSize);
+            YDataRPlot(sampleSize+1:points) = zeros(1,points-sampleSize);
+        else    % if the sample has enough length
+            YDataLPlot = samplePoints(1:points,1);
+            YDataRPlot = samplePoints(1:points,2);
+        end
         prePad = curPad;
         curSamLoc = points;
     end
 end
+
+% change xdata
+XDataL(curPlotLoc+1:curPlotLoc+points) = XDataPlot;
+XDataR(curPlotLoc+1:curPlotLoc+points) = XDataPlot;
 
 % change ydata
 YDataL(curPlotLoc+1:curPlotLoc+points) = YDataLPlot;
@@ -2793,19 +2937,6 @@ set(handles.axes1,'UserData',[curTime curPlotLoc]);
 
 % save the current pad
 set(obj,'UserData',[prePad curSamLoc]);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function SetPadColor(handles)
 % Set the color of empty pad to red and others to green
