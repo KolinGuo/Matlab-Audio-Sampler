@@ -65,7 +65,7 @@ v1.8
 	Add Effects
 
 v1.9
-	Add Piano Keyboard
+	Add Piano Keyboard for basic tone generation
 	Improvement - add left and right channel indicator
 	Improvement - improve the efficiency of delay algorithm
 
