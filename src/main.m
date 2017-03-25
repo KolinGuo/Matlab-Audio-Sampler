@@ -202,22 +202,10 @@ function pad1_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button1,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [1, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(1).points,handles.samples(1).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,1);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 1
+    SaveRecordToPad(hObject,handles,1);
 else % if not in record mode
     % If in Load Mode, load samples into pad 1
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -256,22 +244,10 @@ function pad2_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button2,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [2, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(2).points,handles.samples(2).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,2);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 2
+    SaveRecordToPad(hObject,handles,2);
 else % if not in record mode
     % If in Load Mode, load samples into pad 2
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -310,22 +286,10 @@ function pad3_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button3,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [3, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(3).points,handles.samples(3).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,3);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 3
+    SaveRecordToPad(hObject,handles,3);
 else % if not in record mode
     % If in Load Mode, load samples into pad 3
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -364,22 +328,10 @@ function pad4_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button4,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [4, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(4).points,handles.samples(4).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,4);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 4
+    SaveRecordToPad(hObject,handles,4);
 else % if not in record mode
     % If in Load Mode, load samples into pad 4
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -418,22 +370,10 @@ function pad5_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button5,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [5, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(5).points,handles.samples(5).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,5);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 5
+    SaveRecordToPad(hObject,handles,5);
 else % if not in record mode
     % If in Load Mode, load samples into pad 5
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -472,22 +412,10 @@ function pad6_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button6,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [6, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(6).points,handles.samples(6).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,6);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 6
+    SaveRecordToPad(hObject,handles,6);
 else % if not in record mode
     % If in Load Mode, load samples into pad 6
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -526,22 +454,10 @@ function pad7_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button7,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [7, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(7).points,handles.samples(7).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,7);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 7
+    SaveRecordToPad(hObject,handles,7);
 else % if not in record mode
     % If in Load Mode, load samples into pad 7
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -580,22 +496,10 @@ function pad8_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button8,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [8, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(8).points,handles.samples(8).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,8);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 8
+    SaveRecordToPad(hObject,handles,8);
 else % if not in record mode
     % If in Load Mode, load samples into pad 8
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -634,22 +538,10 @@ function pad9_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button9,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [9, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(9).points,handles.samples(9).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,9);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 9
+    SaveRecordToPad(hObject,handles,9);
 else % if not in record mode
     % If in Load Mode, load samples into pad 9
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -688,22 +580,10 @@ function pad10_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button10,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [10, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(10).points,handles.samples(10).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,10);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 10
+    SaveRecordToPad(hObject,handles,10);
 else % if not in record mode
     % If in Load Mode, load samples into pad 10
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -742,22 +622,10 @@ function pad11_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button11,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [11, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(11).points,handles.samples(11).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,11);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 11
+    SaveRecordToPad(hObject,handles,11);
 else % if not in record mode
     % If in Load Mode, load samples into pad 11
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -796,22 +664,10 @@ function pad12_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button12,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [12, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(12).points,handles.samples(12).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,12);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 12
+    SaveRecordToPad(hObject,handles,12);
 else % if not in record mode
     % If in Load Mode, load samples into pad 12
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -850,22 +706,10 @@ function pad13_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button13,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [13, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(13).points,handles.samples(13).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,13);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 13
+    SaveRecordToPad(hObject,handles,13);
 else % if not in record mode
     % If in Load Mode, load samples into pad 13
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -904,22 +748,10 @@ function pad14_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button14,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [14, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(14).points,handles.samples(14).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,14);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 14
+    SaveRecordToPad(hObject,handles,14);
 else % if not in record mode
     % If in Load Mode, load samples into pad 14
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -958,22 +790,10 @@ function pad15_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button15,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [15, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(15).points,handles.samples(15).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,15);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 15
+    SaveRecordToPad(hObject,handles,15);
 else % if not in record mode
     % If in Load Mode, load samples into pad 15
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -1012,22 +832,10 @@ function pad16_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-if(get(handles.recordButton,'UserData') && strcmp(get(handles.button16,'Visible'),'on')) % if true, in record mode
-    t = toc(handles.timerVal);                  % get the elapsed time
-    clear sound;                                % stop playing
-    rate = handles.recordSample.sampleRate;     % get sample rate
-    points = fix(t * rate);                     % convert time to sample points
-    
-    % store the record
-    pointArr = get(handles.stopButton,'UserData');
-    pointArr(end,3) = points;
-    pointArr = [ pointArr; [16, pointArr(end,2) + points, 0] ];
-    set(handles.stopButton,'UserData',pointArr);
-    
-    % play the sound
-    sound(handles.samples(16).points,handles.samples(16).sampleRate);
-    handles.timerVal = tic;     % store tic
-    guidata(hObject,handles);   % update handles structure
+if(get(handles.recordButton,'UserData')) % if true, in record mode
+    RecordPad(hObject,handles,16);
+elseif(get(handles.savePadButton,'UserData'))   % if true, save the recording to pad 16
+    SaveRecordToPad(hObject,handles,16);
 else % if not in record mode
     % If in Load Mode, load samples into pad 16
     if(get(handles.loadButton,'Value') == get(handles.loadButton,'Max'))
@@ -1270,6 +1078,70 @@ PlaySound(handles.samples(num));
 HideBusyStatus(handles);    % hide the 'Busy' status
 PlayStatus(handles,num);  % show the 'Playing' status
 
+function RecordPad(hObject, handles, num)
+% Record using the sample in the corresponding pad
+%   hObject: handle to pad
+%   handles: structure with handles and user data
+%   num: the pad which the sample needs to be recorded
+t = toc(handles.timerVal);                  % get the elapsed time
+clear sound;                                % stop playing
+rate = handles.recordSample.sampleRate;     % get sample rate
+points = fix(t * rate);                     % convert time to sample points
+
+% store the record
+pointArr = get(handles.stopButton,'UserData');
+pointArr(end,3) = points;
+pointArr = [ pointArr; [num, pointArr(end,2) + points, 0] ];
+set(handles.stopButton,'UserData',pointArr);
+
+% create string for buttons
+strButton = ['button',num2str(num)];
+
+% show the corresponding status indicating whether there is a sample or not
+if(strcmp(get(handles.(strButton),'Visible'),'on'))     % if there is a sample
+    statusStr = sprintf('Loop Recording Mode: Selected pad %d',num);
+    set(handles.status,'String',statusStr);
+else    % if there is no sample
+    statusStr = sprintf('Loop Recording Mode: Empty pad %d. Will be treated as blank',num);
+    set(handles.status,'String',statusStr);
+end
+
+% select the button
+SelectButton(hObject, handles, num);
+
+% if there is a sample, play the sound
+if(strcmp(get(handles.(strButton),'Visible'),'on'))
+    sound(handles.samples(num).points,handles.samples(num).sampleRate);
+end
+handles.timerVal = tic;     % store tic
+guidata(hObject,handles);   % update handles structure
+    
+function SaveRecordToPad(hObject,handles,num)
+% Save the recording in to the corresponding pad
+%   hObject: handle to pad
+%   handles: structure with handles and user data
+%   num: the pad to save the recording
+
+ShowBusyStatus(handles);    % show the 'Busy' status
+pause(.0000001);            % pause for a short time to allow status changes
+sample = handles.recordSample;  % create a copy of the recording
+% initialize other fields
+sample.filterGain = zeros(1,18);
+sample.isReversed = false;
+sample.delay = 0;
+sample.speedUp = 0;
+sample.isVoiceRemoved = false;
+sample.origSample = handles.samples(num);
+handles.samples(num) = sample;  % save the recording
+guidata(hObject, handles);  % update handles
+HideBusyStatus(handles);    % hide the 'Busy' status
+statusStr = sprintf('Successfully save the recording to pad %d',num);
+set(handles.status,'String',statusStr);
+ShowButton(handles, num);   % show the button of the pad
+SelectButton(hObject,handles,num);  % select the button of the pad
+ResetPadColor(handles);     % reset the color of the pads
+set(handles.savePadButton,'UserData',[]);   % reset the userdata(exit the save mode)
+
 function [pathname, filename] = GetLoadPath()
 [filename, pathname] = uigetfile(...
     {'*.aiff;*.aif;*.aifc;*.au;*.flac;*.m4a;*.mp3;*.mp4;*.oga;*.ogg;*.snd;*.wav',....
@@ -1461,6 +1333,7 @@ if button_state == get(hObject,'Max')
     set(handles.copyButton,'Visible','off');
     set(handles.cutButton,'Visible','off');
     set(handles.deleteButton,'Visible','off');
+    set(handles.recordButton,'Enable','off');
     
     set(handles.loadFileButton,'Visible','on','Value',get(handles.loadFileButton,'Max'));
     set(handles.basicToneButton,'Visible','on');
@@ -1509,6 +1382,7 @@ function exitLoadButton_Callback(hObject, eventdata, handles)
     set(handles.copyButton,'Visible','on');
     set(handles.cutButton,'Visible','on');
     set(handles.deleteButton,'Visible','on');
+    set(handles.recordButton,'Enable','on');
     ResetPadColor(handles);
     ClearStatus(handles);
 
@@ -1527,18 +1401,20 @@ if button_state == get(hObject,'Max')
         set(handles.status,'String',...
             'Save Mode: Click on the pads to save your samples and reclick ''Save'' to quit');
     end
-        set(handles.loadButton,'Visible','off');
-        set(handles.saveButton,'TooltipString','Reclick to return');
-        set(handles.copyButton,'Visible','off');
-        set(handles.cutButton,'Visible','off');
-        set(handles.deleteButton,'Visible','off');
-        SetPadColor(handles);
+    set(handles.loadButton,'Enable','off');
+    set(handles.saveButton,'TooltipString','Reclick to return');
+    set(handles.copyButton,'Enable','off');
+    set(handles.cutButton,'Enable','off');
+    set(handles.deleteButton,'Enable','off');
+    set(handles.recordButton,'Enable','off');
+    SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
-    set(handles.loadButton,'Visible','on');
+    set(handles.loadButton,'Enable','on');
     set(handles.saveButton,'TooltipString','');
-    set(handles.copyButton,'Visible','on');
-    set(handles.cutButton,'Visible','on');
-    set(handles.deleteButton,'Visible','on');
+    set(handles.copyButton,'Enable','on');
+    set(handles.cutButton,'Enable','on');
+    set(handles.deleteButton,'Enable','on');
+    set(handles.recordButton,'Enable','on');
     ResetPadColor(handles);
     ClearStatus(handles);
 end
@@ -1558,19 +1434,21 @@ if button_state == get(hObject,'Max')
         set(handles.status,'String',...
             'Copy Mode: Click on the pads to copy your samples from one pad to another and reclick ''Copy'' to cancel');
     end
-        set(handles.loadButton,'Visible','off');
-        set(handles.saveButton,'Visible','off');
+        set(handles.loadButton,'Enable','off');
+        set(handles.saveButton,'Enable','off');
         set(handles.copyButton,'TooltipString','Reclick to return');
-        set(handles.cutButton,'Visible','off');
-        set(handles.deleteButton,'Visible','off');
+        set(handles.cutButton,'Enable','off');
+        set(handles.deleteButton,'Enable','off');
+        set(handles.recordButton,'Enable','off');
         SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(hObject,'UserData',[]);     % reset UserData
-    set(handles.loadButton,'Visible','on');
-    set(handles.saveButton,'Visible','on');
+    set(handles.loadButton,'Enable','on');
+    set(handles.saveButton,'Enable','on');
     set(handles.copyButton,'TooltipString','');
-    set(handles.cutButton,'Visible','on');
-    set(handles.deleteButton,'Visible','on');
+    set(handles.cutButton,'Enable','on');
+    set(handles.deleteButton,'Enable','on');
+    set(handles.recordButton,'Enable','on');
     ResetPadColor(handles);
     ClearStatus(handles);
 end
@@ -1590,19 +1468,21 @@ if button_state == get(hObject,'Max')
         set(handles.status,'String',...
             'Cut Mode: Click on the pads to move your samples from one pad to another and reclick ''Cut'' to cancel');
     end
-        set(handles.loadButton,'Visible','off');
-        set(handles.saveButton,'Visible','off');
-        set(handles.copyButton,'Visible','off');
+        set(handles.loadButton,'Enable','off');
+        set(handles.saveButton,'Enable','off');
+        set(handles.copyButton,'Enable','off');
         set(handles.cutButton,'TooltipString','Reclick to return');
-        set(handles.deleteButton,'Visible','off');
+        set(handles.deleteButton,'Enable','off');
+        set(handles.recordButton,'Enable','off');
         SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(hObject,'UserData',[]);     % reset UserData
-    set(handles.loadButton,'Visible','on');
-    set(handles.saveButton,'Visible','on');
-    set(handles.copyButton,'Visible','on');
+    set(handles.loadButton,'Enable','on');
+    set(handles.saveButton,'Enable','on');
+    set(handles.copyButton,'Enable','on');
     set(handles.cutButton,'TooltipString','');
-    set(handles.deleteButton,'Visible','on');
+    set(handles.deleteButton,'Enable','on');
+    set(handles.recordButton,'Enable','on');
     ResetPadColor(handles);
     ClearStatus(handles);
 end
@@ -1622,18 +1502,20 @@ if button_state == get(hObject,'Max')
         set(handles.status,'String',...
             'Delete Mode: Click on the pads to delete your samples from the pad and reclick ''Delete'' to quit');
     end
-        set(handles.loadButton,'Visible','off');
-        set(handles.saveButton,'Visible','off');
-        set(handles.copyButton,'Visible','off');
-        set(handles.cutButton,'Visible','off');
+        set(handles.loadButton,'Enable','off');
+        set(handles.saveButton,'Enable','off');
+        set(handles.copyButton,'Enable','off');
+        set(handles.cutButton,'Enable','off');
         set(handles.deleteButton,'TooltipString','Reclick to return');
+        set(handles.recordButton,'Enable','off');
         SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
-    set(handles.loadButton,'Visible','on');
-    set(handles.saveButton,'Visible','on');
-    set(handles.copyButton,'Visible','on');
-    set(handles.cutButton,'Visible','on');
+    set(handles.loadButton,'Enable','on');
+    set(handles.saveButton,'Enable','on');
+    set(handles.copyButton,'Enable','on');
+    set(handles.cutButton,'Enable','on');
     set(handles.deleteButton,'TooltipString','');
+    set(handles.recordButton,'Enable','on');
     ResetPadColor(handles);
     ClearStatus(handles);
 end
@@ -2306,11 +2188,38 @@ function recordButton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 clear sound;
+
+% clear the axes
+cla(handles.axes1);
+cla(handles.axes2);
+
 % if in not record mode, start recording
 set(hObject,'UserData',true);
-set(handles.stopButton,'UserData',[0 0 0]);     % reset recording time
-    
+set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
+
+% enable the stop button
+set(handles.stopButton,'Enable','on');
+
+% disable other unrelated functionalities' buttons
+set(handles.saveFileButton,'Enable','off');
+set(handles.savePadButton,'Enable','off');
+set(handles.loadButton,'Enable','off');
+set(handles.saveButton,'Enable','off');
+set(handles.copyButton,'Enable','off');
+set(handles.cutButton,'Enable','off');
+set(handles.deleteButton,'Enable','off');
+set(handles.reversalButton,'Enable','off');
+set(handles.delayButton,'Enable','off');
+set(handles.speedUpButton,'Enable','off');
+set(handles.toneControlButton,'Enable','off');
+set(handles.voiceRemovalButton,'Enable','off');
+
 % set status bar
+set(handles.status,'String',...
+        'Loop Recording Mode: Start by clicking one of the pad');
+
+% set curPad to 0
+handles.curPad = 0;
     
 % start ticking
 handles.timerVal = tic;
@@ -2326,16 +2235,18 @@ function stopButton_Callback(hObject, eventdata, handles)
 
 elapseT = toc(handles.timerVal);    % get the elapsed time of the last sample
 clear sound;                        % stop playing
+ShowBusyStatus(handles);    % show the 'Busy' status
+pause(.0000001);            % pause for a short time to allow status changes
 rate = handles.recordSample.sampleRate;     % get sample rate
-elapsePoints = fix(elapseT * rate);                     % convert time to sample points
+elapsePoints = fix(elapseT * rate);         % convert time to sample points
 
 pointArr = get(handles.stopButton,'UserData');   % get the sample points array for recording
 pointArr(end,3) = elapsePoints;   % save the elapsed points for the last sample
 
 % sort the data
-sampleIdx = pointArr(2:end,1);           % the sample index
-sampleStartPoints = pointArr(2:end,2);     % the starting sample points of the samples
-sampleElapsePoints = pointArr(2:end,3);    % the elapsed sample points of the samples
+sampleIdx = pointArr(:,1);           % the sample index
+sampleStartPoints = pointArr(:,2);     % the starting sample points of the samples
+sampleElapsePoints = pointArr(:,3);    % the elapsed sample points of the samples
 
 % calculate total recording point
 totalRecordPoints = sampleStartPoints(end) + sampleElapsePoints(end);
@@ -2343,14 +2254,22 @@ totalRecordPoints = sampleStartPoints(end) + sampleElapsePoints(end);
 % create an empty array to hold the sample points
 record = zeros(totalRecordPoints,2);
 
+% copy the points from samples to record
 for i = 1:size(sampleIdx,1)
-    samplePoints = handles.samples(sampleIdx(i)).points;
-    if (size(samplePoints,2) == 2)
-        record(sampleStartPoints(i):(sampleStartPoints(i) + sampleElapsePoints(i) - 1) , :) = samplePoints(1:sampleElapsePoints(i) , :);                     
+    % if the index is 0 or there is no sample in the pad, treat it as a
+    % blank
+    if(sampleIdx(i) == 0 || isempty(handles.samples(sampleIdx(i)).points))
+        samplePoints = zeros(sampleElapsePoints(i),2);
     else
-        newSamplePoints = [samplePoints,samplePoints];
-        record(sampleStartPoints(i):(sampleStartPoints(i) + sampleElapsePoints(i) - 1) , :) = newSamplePoints(1:sampleElapsePoints(i) , :);
+        samplePoints = handles.samples(sampleIdx(i)).points;
+        if(size(samplePoints,2) == 1)   % if the sample is mono
+            % change it to stereo by duplicating the channel
+            samplePoints = [samplePoints,samplePoints];
+        end
     end
+    
+    % paste the data
+    record(sampleStartPoints(i):(sampleStartPoints(i) + sampleElapsePoints(i) - 1) , :) = samplePoints(1:sampleElapsePoints(i) , :);
 end
 
 % get the info for recording
@@ -2363,26 +2282,97 @@ timeSigStr = timeSigStr{get(handles.timeSigEdit,'Value')};
 duration = CalTimeFromBPM(bars,timeSigStr,bpm);
 totalPoints = rate * duration;
 
+% calculate how many rounds the recording has been through
 rounds = fix(totalRecordPoints / totalPoints);
+
+% calculate the number of points that are left behind in the last round
 numPointsLeft = totalRecordPoints - rounds * totalPoints;
 
-finalRecord = zeros(totalPoints,2);
+% if there is more than 1 round, paste the finalRecord with the last round
+% to end
 if(rounds >= 1)
-    finalRecord = record((rounds-1) * totalPoints : rounds * totalPoints , :);
+    finalRecord = record((rounds-1) * totalPoints + 1: rounds * totalPoints , :);
 end
+% replace the points that are left behind in the last round
 finalRecord(1:numPointsLeft , :) = record((end-numPointsLeft + 1):end , :);
 
-sound(finalRecord,44100);
+% play the recording
+sound(finalRecord,rate);
 
 set(handles.recordButton,'UserData',false);     % stop recording
+set(handles.stopButton,'UserData',[0 1 0]);     % reset recording time
 
+% save the recording to handles
 handles.recordSample.points = finalRecord;
-handles.recordSample.sampleRate = 44100;
-% add more
+handles.recordSample.selectPeriod = [1 size(finalRecord,1)];
 
 guidata(hObject, handles);  % update handles structure
 
+% disable the stop button
+set(handles.stopButton,'Enable','off');
+
+% enable the two saving buttons
+set(handles.saveFileButton,'Enable','on');
+set(handles.savePadButton,'Enable','on');
+
+% enable other unrelated functionalities' buttons
+set(handles.loadButton,'Enable','on');
+set(handles.saveButton,'Enable','on');
+set(handles.copyButton,'Enable','on');
+set(handles.cutButton,'Enable','on');
+set(handles.deleteButton,'Enable','on');
+set(handles.reversalButton,'Enable','on');
+set(handles.delayButton,'Enable','on');
+set(handles.speedUpButton,'Enable','on');
+set(handles.toneControlButton,'Enable','on');
+set(handles.voiceRemovalButton,'Enable','on');
+
+% clear status bar
+ClearStatus(handles);
+
 ResetPadColor(handles);     % Reset the color of pads to default
+
+HideBusyStatus(handles);    % hide the 'Busy' status
+
+% --- Executes on button press in saveFileButton.
+function saveFileButton_Callback(hObject, eventdata, handles)
+% Save the recording to file
+% hObject    handle to saveFileButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% get file path
+defaultFilename = 'recording';
+[filename, pathname] = uiputfile(...
+    {'*.wav','Waveform Audio File (*.wav)';...
+    '*.m4a;*.mp4','MPEG-4 (*.m4a, *.mp4)';...
+    '*.flac','Free Lossless Audio Codec (*.flac)';...
+    '*.ogg;*.oga','Ogg Vorbis (*.ogg, *.oga)'},...
+    'Save as an audio file', defaultFilename);
+
+if filename == 0     % if user canceled to save
+    set(handles.status,'String','Cancel to save the recording to file');
+else
+    ShowBusyStatus(handles);    % show the 'Busy' status
+    pause(.0000001);            % pause for a short time to allow status changes
+    Save([pathname, filename],handles.recordSample);  % save the file
+    HideBusyStatus(handles);    % hide the 'Busy' status
+    statusStr = sprintf('Successfully save the recording as ''%s''',filename);
+    set(handles.status,'String',statusStr);
+end
+
+% --- Executes on button press in savePadButton.
+function savePadButton_Callback(hObject, eventdata, handles)
+% Save the recording to pad
+% hObject    handle to savePadButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+SetPadColor(handles);   % set the color of the pads
+
+% set status bar
+set(handles.status,'String','Click any of the pads to save the recording to that pad');
+set(hObject,'UserData',true);
 
 function bpmEdit_Callback(hObject, eventdata, handles)
 % hObject    handle to bpmEdit (see GCBO)
@@ -2408,28 +2398,6 @@ function numBarsEdit_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of numBarsEdit as text
 %        str2double(get(hObject,'String')) returns contents of numBarsEdit as a double
-
-
-
-% --- Executes on button press in saveFileButton.
-function saveFileButton_Callback(hObject, eventdata, handles)
-% hObject    handle to saveFileButton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-
-
-
-% --- Executes on button press in savePadButton.
-function savePadButton_Callback(hObject, eventdata, handles)
-% hObject    handle to savePadButton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-
-
 
 
 function SetPadColor(handles)
@@ -2459,6 +2427,13 @@ function SelectButton(hObject, handles, num)
 % Select the button of the corresponding pad
 str = ['button',num2str(num)];
 set(handles.(str),'Value',get(handles.(str),'Max'));
+% if in loop recording mode, set curPad and return
+if(get(handles.recordButton,'UserData'))
+    handles.curPad = num;
+    guidata(hObject, handles);
+    return;
+end
+
 % if current pad is 0, clear the sound;
 % if the current pad is going to be selected or Copy Mode or Cut Mode,
 % continue to play;
