@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 16-Mar-2017 10:24:54
+% Last Modified by GUIDE v2.5 18-Mar-2017 13:30:05
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -60,6 +60,11 @@ for i = 1:16
     handles.samples(i).sampleRate = 0;
     handles.samples(i).selectPeriod = [];   % unit: samplePoints(used in chopping and graphing)
     handles.samples(i).filterGain = [];     % filter gain for tone control (units: dB, range: -20~20)
+    handles.samples(i).isReversed = false;  % if the sample is reversed
+    handles.samples(i).delay = 0;           % the milisecond that the sample is delayed
+    handles.samples(i).speedUp = 0;         % how much faster/slower than the original sample
+    handles.samples(i).isVoiceRemoved = false; % if the voice is removed
+    handles.samples(i).origSample = handles.samples(i);     % store the original sample
 end
 
 % Save the pad number of current selected sample
@@ -117,6 +122,30 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+% --- Executes during object creation, after setting all properties.
+function delayText_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to delayText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes during object creation, after setting all properties.
+function speedUpText_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to speedUpText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
 % --- Executes on button press in pad1.
 function pad1_Callback(hObject, eventdata, handles)
 % hObject    handle to pad1 (see GCBO)
@@ -144,6 +173,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 1);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 1);
     end
 end
@@ -175,6 +205,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 2);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 2);
     end
 end
@@ -206,6 +237,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 3);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 3);
     end
 end
@@ -237,6 +269,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 4);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 4);
     end
 end
@@ -268,6 +301,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 5);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 5);
     end
 end
@@ -299,6 +333,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 6);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 6);
     end
 end
@@ -330,6 +365,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 7);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 7);
     end
 end
@@ -361,6 +397,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 8);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 8);
     end
 end
@@ -392,6 +429,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 9);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 9);
     end
 end
@@ -423,6 +461,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 10);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 10);
     end
 end
@@ -454,6 +493,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 11);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 11);
     end
 end
@@ -485,6 +525,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 12);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 12);
     end
 end
@@ -516,6 +557,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 13);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 13);
     end
 end
@@ -547,6 +589,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 14);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 14);
     end
 end
@@ -578,6 +621,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 15);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 15);
     end
 end
@@ -609,6 +653,7 @@ else    % if there is a sample
     % Normal Play sound
     else
         SelectButton(hObject, handles, 16);
+        pause(.01);            % pause for a short time to allow status changes
         PlayFromPad(handles, 16);
     end
 end
@@ -724,6 +769,11 @@ else    % if it was the second click, copy the sample, delete the original and r
         handles.samples(cutFromPad).sampleRate = 0;
         handles.samples(cutFromPad).selectPeriod = [];
         handles.samples(cutFromPad).filterGain = [];
+        handles.samples(cutFromPad).isReversed = false;
+        handles.samples(cutFromPad).delay = 0;
+        handles.samples(cutFromPad).speedUp = 0;
+        handles.samples(cutFromPad).isVoiceRemoved = false;
+        handles.samples(cutFromPad).origSample = handles.samples(cutFromPad);
     end
     guidata(hObject, handles);  % update handles
     HideBusyStatus(handles);    % hide the 'Busy' status
@@ -757,6 +807,11 @@ handles.samples(num).points = [];  % delete the sample
 handles.samples(num).sampleRate = 0;
 handles.samples(num).selectPeriod = [];
 handles.samples(num).filterGain = [];
+handles.samples(num).isReversed = false;
+handles.samples(num).delay = 0;
+handles.samples(num).speedUp = 0;
+handles.samples(num).isVoiceRemoved = false;
+handles.samples(num).origSample = handles.samples(num);
 guidata(hObject, handles);  % update handles
 HideBusyStatus(handles);    % hide the 'Busy' status
 SetPadColor(handles);       % refresh the color of pads
@@ -965,12 +1020,14 @@ button_state = get(hObject,'Value');
 if button_state == get(hObject,'Max')
     set(handles.status,'String',...
         'Load Mode: Click on the pads to load your samples and reclick ''Load'' to quit');
+    set(handles.loadButton,'TooltipString','Reclick to return');
     set(handles.saveButton,'Visible','off');
     set(handles.copyButton,'Visible','off');
     set(handles.cutButton,'Visible','off');
     set(handles.deleteButton,'Visible','off');
     SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
+    set(handles.loadButton,'TooltipString','');
     set(handles.saveButton,'Visible','on');
     set(handles.copyButton,'Visible','on');
     set(handles.cutButton,'Visible','on');
@@ -988,15 +1045,21 @@ function saveButton_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of saveButton
 button_state = get(hObject,'Value');
 if button_state == get(hObject,'Max')
-    set(handles.status,'String',...
-        'Save Mode: Click on the pads to save your samples and reclick ''Save'' to quit');
-    set(handles.loadButton,'Visible','off');
-    set(handles.copyButton,'Visible','off');
-    set(handles.cutButton,'Visible','off');
-    set(handles.deleteButton,'Visible','off');
-    SetPadColor(handles);
+    if(handles.curPad == 0)     % if there is no sample
+        NoSampleStatus(handles);
+    else    % if there is at least a sample
+        set(handles.status,'String',...
+            'Save Mode: Click on the pads to save your samples and reclick ''Save'' to quit');
+    end
+        set(handles.loadButton,'Visible','off');
+        set(handles.saveButton,'TooltipString','Reclick to return');
+        set(handles.copyButton,'Visible','off');
+        set(handles.cutButton,'Visible','off');
+        set(handles.deleteButton,'Visible','off');
+        SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(handles.loadButton,'Visible','on');
+    set(handles.saveButton,'TooltipString','');
     set(handles.copyButton,'Visible','on');
     set(handles.cutButton,'Visible','on');
     set(handles.deleteButton,'Visible','on');
@@ -1013,17 +1076,23 @@ function copyButton_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of copyButton
 button_state = get(hObject,'Value');
 if button_state == get(hObject,'Max')
-    set(handles.status,'String',...
-        'Copy Mode: Click on the pads to copy your samples from one pad to another and reclick ''Copy'' to cancel');
-    set(handles.loadButton,'Visible','off');
-    set(handles.saveButton,'Visible','off');
-    set(handles.cutButton,'Visible','off');
-    set(handles.deleteButton,'Visible','off');
-    SetPadColor(handles);
+    if(handles.curPad == 0)     % if there is no sample
+        NoSampleStatus(handles);
+    else    % if there is at least a sample
+        set(handles.status,'String',...
+            'Copy Mode: Click on the pads to copy your samples from one pad to another and reclick ''Copy'' to cancel');
+    end
+        set(handles.loadButton,'Visible','off');
+        set(handles.saveButton,'Visible','off');
+        set(handles.copyButton,'TooltipString','Reclick to return');
+        set(handles.cutButton,'Visible','off');
+        set(handles.deleteButton,'Visible','off');
+        SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(hObject,'UserData',[]);     % reset UserData
     set(handles.loadButton,'Visible','on');
     set(handles.saveButton,'Visible','on');
+    set(handles.copyButton,'TooltipString','');
     set(handles.cutButton,'Visible','on');
     set(handles.deleteButton,'Visible','on');
     ResetPadColor(handles);
@@ -1039,18 +1108,24 @@ function cutButton_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of cutButton
 button_state = get(hObject,'Value');
 if button_state == get(hObject,'Max')
-    set(handles.status,'String',...
-        'Cut Mode: Click on the pads to move your samples from one pad to another and reclick ''Cut'' to cancel');
-    set(handles.loadButton,'Visible','off');
-    set(handles.saveButton,'Visible','off');
-    set(handles.copyButton,'Visible','off');
-    set(handles.deleteButton,'Visible','off');
-    SetPadColor(handles);
+    if(handles.curPad == 0)     % if there is no sample
+        NoSampleStatus(handles);
+    else    % if there is at least a sample
+        set(handles.status,'String',...
+            'Cut Mode: Click on the pads to move your samples from one pad to another and reclick ''Cut'' to cancel');
+    end
+        set(handles.loadButton,'Visible','off');
+        set(handles.saveButton,'Visible','off');
+        set(handles.copyButton,'Visible','off');
+        set(handles.cutButton,'TooltipString','Reclick to return');
+        set(handles.deleteButton,'Visible','off');
+        SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(hObject,'UserData',[]);     % reset UserData
     set(handles.loadButton,'Visible','on');
     set(handles.saveButton,'Visible','on');
     set(handles.copyButton,'Visible','on');
+    set(handles.cutButton,'TooltipString','');
     set(handles.deleteButton,'Visible','on');
     ResetPadColor(handles);
     ClearStatus(handles);
@@ -1065,18 +1140,24 @@ function deleteButton_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of deleteButton
 button_state = get(hObject,'Value');
 if button_state == get(hObject,'Max')
-    set(handles.status,'String',...
-        'Delete Mode: Click on the pads to delete your samples from the pad and reclick ''Delete'' to quit');
-    set(handles.loadButton,'Visible','off');
-    set(handles.saveButton,'Visible','off');
-    set(handles.copyButton,'Visible','off');
-    set(handles.cutButton,'Visible','off');
-    SetPadColor(handles);
+    if(handles.curPad == 0)     % if there is no sample
+        NoSampleStatus(handles);
+    else    % if there is at least a sample
+        set(handles.status,'String',...
+            'Delete Mode: Click on the pads to delete your samples from the pad and reclick ''Delete'' to quit');
+    end
+        set(handles.loadButton,'Visible','off');
+        set(handles.saveButton,'Visible','off');
+        set(handles.copyButton,'Visible','off');
+        set(handles.cutButton,'Visible','off');
+        set(handles.deleteButton,'TooltipString','Reclick to return');
+        SetPadColor(handles);
 elseif button_state == get(hObject,'Min')
     set(handles.loadButton,'Visible','on');
     set(handles.saveButton,'Visible','on');
     set(handles.copyButton,'Visible','on');
     set(handles.cutButton,'Visible','on');
+    set(handles.deleteButton,'TooltipString','');
     ResetPadColor(handles);
     ClearStatus(handles);
 end
@@ -1399,6 +1480,345 @@ else % < 0.000015 s
     factor = 10000000;
 end
 
+% --- Executes on button press in reversalButton.
+function reversalButton_Callback(hObject, eventdata, handles)
+% hObject    handle to reversalButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+curPad = handles.curPad;    % get current pad
+if(curPad == 0)     % if there is no sample
+    NoSampleStatus(handles);
+else    % if there is a sample selected
+    isReversed = handles.samples(curPad).isReversed;
+    if(isReversed == false)    % if the effect is off
+        handles.samples(curPad).isReversed = true;  % set effect on
+        guidata(hObject, handles);  % Update handles structure
+        
+        ChangeEffects(handles);     % change effects
+        
+        UpdateEffectsColor(handles);    % update color
+    elseif(isReversed == true) % if the effect is on
+        handles.samples(curPad).isReversed = false;     % set effect off
+        guidata(hObject, handles);  % Update handles structure
+                
+        ChangeEffects(handles);     % change effects
+        
+        UpdateEffectsColor(handles);    % update color
+    else    % for debug purpose
+        errordlg('Bug Detected: isReversed','Bug Detected','modal');
+    end
+end
+
+% --- Executes on button press in delayButton.
+function delayButton_Callback(hObject, eventdata, handles)
+% hObject    handle to delayButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+curPad = handles.curPad;    % get current pad
+if(curPad == 0)     % if there is no sample
+    NoSampleStatus(handles);
+else    % if there is a sample selected
+    % hide all component
+    set(handles.reversalButton,'Visible','off');
+    set(handles.delayButton,'Visible','off');
+    set(handles.speedUpButton,'Visible','off');
+    set(handles.toneControlButton,'Visible','off');
+    set(handles.voiceRemovalButton,'Visible','off');
+    
+    % get current delay value (in ms)
+    delay = handles.samples(curPad).delay;
+    
+    % change the frame and component
+    set(handles.effectsPanel,'Title','Delay');
+    set(handles.delayText,'Visible','on','String',delay);
+    set(handles.delayUnitText,'Visible','on');
+    set(handles.delayApplyButton,'Visible','on');
+        
+    % change status bar
+    set(handles.status,'String',...
+        'Delay Effect: Change the delay time in ms and click ''Apply''');
+end
+
+% --- Executes on button press in delayApplyButton.
+function delayApplyButton_Callback(hObject, eventdata, handles)
+% hObject    handle to delayApplyButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+curPad = handles.curPad;    % get current pad
+delay = handles.samples(curPad).delay;  % get the delay value
+delayChangeStr = get(handles.delayText,'String');
+delayChange = str2double(delayChangeStr);
+duration = size(handles.samples(curPad).points,1) / handles.samples(curPad).sampleRate;
+duration = duration * 1000;     % duration in ms
+% check format
+if(isnan(delayChange) || ~isreal(delayChange) ||...
+        delayChange < 0 || delayChange > duration) % if it's not correct format
+    set(handles.status,'String','Error: Wrong delay time');
+    set(handles.delayText,'String',delay);
+else    % if the format is correct
+    if(delay ~= delayChange)    % if there is a change, call ChangeEffects
+        handles.samples(curPad).delay = delayChange;
+        guidata(hObject, handles);  % Update handles structure
+        
+        ChangeEffects(handles);     % change effects
+    end 
+    % change the frame and hide all components
+    set(handles.effectsPanel,'Title','Effects');
+    set(handles.delayText,'Visible','off');
+    set(handles.delayUnitText,'Visible','off');
+    set(handles.delayApplyButton,'Visible','off');
+    
+    % set visible
+    set(handles.reversalButton,'Visible','on');
+    set(handles.delayButton,'Visible','on');
+    set(handles.speedUpButton,'Visible','on');
+    set(handles.toneControlButton,'Visible','on');
+    set(handles.voiceRemovalButton,'Visible','on');
+    
+    UpdateEffectsColor(handles);    % update color
+end
+    
+% --- Executes on button press in speedUpButton.
+function speedUpButton_Callback(hObject, eventdata, handles)
+% hObject    handle to speedUpButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+curPad = handles.curPad;    % get current pad
+if(curPad == 0)     % if there is no sample
+    NoSampleStatus(handles);
+else    % if there is a sample selected
+    % hide all component
+    set(handles.reversalButton,'Visible','off');
+    set(handles.delayButton,'Visible','off');
+    set(handles.speedUpButton,'Visible','off');
+    set(handles.toneControlButton,'Visible','off');
+    set(handles.voiceRemovalButton,'Visible','off');
+    
+    % get current speedUp factor
+    speedUp = handles.samples(curPad).speedUp;
+    
+    % change the frame and component
+    set(handles.effectsPanel,'Title','Speed Up/Slow Down');
+    set(handles.speedUpText,'Visible','on','String',speedUp);
+    set(handles.speedUpHelpText,'Visible','on');
+    set(handles.speedUpUnitText,'Visible','on');
+    set(handles.speedUpApplyButton,'Visible','on');
+        
+    % change status bar
+    set(handles.status,'String',...
+        'Speed Up/Slow Down Effect: Change the factor (positive for speed up, negative for slow down) and click ''Apply''');
+end
+
+% --- Executes on button press in speedUpApplyButton.
+function speedUpApplyButton_Callback(hObject, eventdata, handles)
+% hObject    handle to speedUpApplyButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+curPad = handles.curPad;    % get current pad
+speedUp = handles.samples(curPad).speedUp;  % get the speedUp factor
+speedUpChangeStr = get(handles.speedUpText,'String');
+speedUpChange = str2double(speedUpChangeStr);
+
+% check format
+if(isnan(speedUpChange) || ~isreal(speedUpChange)) % if it's not correct format
+    set(handles.status,'String','Error: Wrong speed up/slow down factor');
+    set(handles.speedUpText,'String',speedUp);
+else    % if the format is correct
+    if(speedUp ~= speedUpChange)    % if there is a change, call ChangeEffects
+        handles.samples(curPad).speedUp = speedUpChange;
+        guidata(hObject, handles);  % Update handles structure
+        
+        ChangeEffects(handles);     % change effects
+    end 
+    % change the frame and hide all components
+    set(handles.effectsPanel,'Title','Effects');
+    set(handles.speedUpText,'Visible','off');
+    set(handles.speedUpHelpText,'Visible','off');
+    set(handles.speedUpUnitText,'Visible','off');
+    set(handles.speedUpApplyButton,'Visible','off');
+    
+    % set visible
+    set(handles.reversalButton,'Visible','on');
+    set(handles.delayButton,'Visible','on');
+    set(handles.speedUpButton,'Visible','on');
+    set(handles.toneControlButton,'Visible','on');
+    set(handles.voiceRemovalButton,'Visible','on');
+    
+    UpdateEffectsColor(handles);    % update color
+end
+
+% --- Executes on button press in toneControlButton.
+function toneControlButton_Callback(hObject, eventdata, handles)
+% hObject    handle to toneControlButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+curPad = handles.curPad;    % get current pad
+filterGain = handles.samples(curPad).filterGain;  % get the gain value
+if(curPad == 0)     % if there is no sample
+    NoSampleStatus(handles);
+else    % if there is a sample selected
+    % hide all component
+    set(handles.reversalButton,'Visible','off');
+    set(handles.delayButton,'Visible','off');
+    set(handles.speedUpButton,'Visible','off');
+    set(handles.toneControlButton,'Visible','off');
+    set(handles.voiceRemovalButton,'Visible','off');
+    
+    % change the frame and component
+    set(handles.effectsPanel,'Title','Tone Control');
+    set(handles.toneControlHelpText,'Visible','on');
+    
+    % change status bar
+    set(handles.status,'String',...
+        'Tone Control Effect: Change the gain of different frequency and click ''Apply''');
+    
+    % Open the equalizer and set the 'main' GUI to wait for it to close
+    fEQ = equalizer;
+    uiwait(fEQ);
+    
+    % Retrieve Latest handles structure
+    handles = guidata(handles.main);
+    
+    % get the current gain value
+    filterGainChange = handles.samples(curPad).filterGain;
+    
+    if(any(filterGain ~= filterGainChange))     % if there is a change, call ChangeEffects
+        ChangeEffects(handles);     % change effects
+    end
+        
+    % change the frame and hide all components
+    set(handles.effectsPanel,'Title','Effects');
+    set(handles.toneControlHelpText,'Visible','off');
+    
+    % set visible
+    set(handles.reversalButton,'Visible','on');
+    set(handles.delayButton,'Visible','on');
+    set(handles.speedUpButton,'Visible','on');
+    set(handles.toneControlButton,'Visible','on');
+    set(handles.voiceRemovalButton,'Visible','on');
+    
+    UpdateEffectsColor(handles);    % update color
+end
+
+% --- Executes on button press in voiceRemovalButton.
+function voiceRemovalButton_Callback(hObject, eventdata, handles)
+% hObject    handle to voiceRemovalButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+curPad = handles.curPad;    % get current pad
+if(curPad == 0)     % if there is no sample
+    NoSampleStatus(handles);
+else    % if there is a sample selected
+    isVoiceRemoved = handles.samples(curPad).isVoiceRemoved;
+    if(isVoiceRemoved == false)    % if the effect is off
+        handles.samples(curPad).isVoiceRemoved = true;  % set effect on
+        guidata(hObject, handles);  % Update handles structure
+        
+        ChangeEffects(handles);     % change effects
+        
+        % Retrieve Latest handles structure
+        handles = guidata(handles.main);
+        
+        UpdateEffectsColor(handles);    % update color
+    elseif(isVoiceRemoved == true) % if the effect is on
+        handles.samples(curPad).isVoiceRemoved = false;     % set effect off
+        guidata(hObject, handles);  % Update handles structure
+                
+        ChangeEffects(handles);     % change effects
+        % Retrieve Latest handles structure
+        handles = guidata(handles.main);
+        
+        UpdateEffectsColor(handles);    % update color
+    else    % for debug purpose
+        errordlg('Bug Detected: isVoiceRemoved','Bug Detected','modal');
+    end
+end
+
+function UpdateEffectsColor(handles)
+% Update the effect buttons' color
+% handles: structure with handles and user data
+curPad = handles.curPad;    % get current pad
+% get data from current sample
+isReversed = handles.samples(curPad).isReversed;
+delay = handles.samples(curPad).delay;
+speedUp = handles.samples(curPad).speedUp;
+isVoiceRemoved = handles.samples(curPad).isVoiceRemoved;
+filterGain = handles.samples(curPad).filterGain;
+% set color
+if(isReversed)
+    set(handles.reversalButton,'BackgroundColor',[0.542 0.907 0.289]);
+else
+    set(handles.reversalButton,'BackgroundColor',[0.94 0.94 0.94]);
+end
+if(delay ~= 0)
+    set(handles.delayButton,'BackgroundColor',[0.542 0.907 0.289]);
+else
+    set(handles.delayButton,'BackgroundColor',[0.94 0.94 0.94]);
+end
+if(speedUp ~= 0)
+    set(handles.speedUpButton,'BackgroundColor',[0.542 0.907 0.289]);
+else
+    set(handles.speedUpButton,'BackgroundColor',[0.94 0.94 0.94]);
+end
+if(isVoiceRemoved)
+    set(handles.voiceRemovalButton,'BackgroundColor',[0.542 0.907 0.289]);
+else
+    set(handles.voiceRemovalButton,'BackgroundColor',[0.94 0.94 0.94]);
+end
+if(any(filterGain))
+    set(handles.toneControlButton,'BackgroundColor',[0.542 0.907 0.289]);
+else
+    set(handles.toneControlButton,'BackgroundColor',[0.94 0.94 0.94]);
+end
+
+function ChangeEffects(handles)
+% change all five effects using the original copy of the current sample
+% handles: structure with handles and user data
+ShowBusyStatus(handles);    % show the 'Busy' status
+pause(.0000001);            % pause for a short time to allow status changes
+
+curPad = handles.curPad;    % get the current pad
+% set to original sample 
+handles.samples(curPad).points = handles.samples(curPad).origSample.points;
+handles.samples(curPad).sampleRate = handles.samples(curPad).origSample.sampleRate;
+handles.samples(curPad).selectPeriod = handles.samples(curPad).origSample.selectPeriod;
+
+if(handles.samples(curPad).isReversed)  % if it needs to be reversed
+    handles.samples(curPad) = Reverse(handles.samples(curPad));
+end
+
+if(handles.samples(curPad).speedUp ~= 0)    % if it needs to be speed up/slow down
+    handles.samples(curPad) = SpeedUp(handles.samples(curPad));
+end
+
+if(any(handles.samples(curPad).filterGain))     % if it needs to equalized
+    handles.samples(curPad) = FourierFilter(handles.samples(curPad));
+end
+
+if(handles.samples(curPad).isVoiceRemoved)  % if it needs to remove voice
+    if(size(handles.samples(curPad).points,2) == 1)     % if the sample is mono, cannot perform voice removal
+        handles.samples(curPad).isVoiceRemoved = false;
+        errordlg('Cannot perform voice removal on mono sample','Voice Removal','modal');
+    else
+        handles.samples(curPad) = VoiceRemove(handles.samples(curPad));
+    end
+end
+
+if(handles.samples(curPad).delay ~= 0)  % if it needs to be delayed
+    handles.samples(curPad) = Delay(handles.samples(curPad));
+end
+
+guidata(handles.main,handles);  % update handles structure
+
+Plot(handles);  % replot the graph
+
+clear sound;
+
+% set status bar
+set(handles.status,'String','Successfully applied the effects');
+
+HideBusyStatus(handles);    % hide the 'Busy' status
+
 function SetPadColor(handles)
 % Set the color of empty pad to red and others to green
 for i = 1:16
@@ -1445,6 +1865,7 @@ if(copyCurPad == 0 || ~(get(handles.copyButton,'Value') == get(handles.copyButto
         get(handles.cutButton,'Value') == get(handles.cutButton,'Max')))
     Plot(handles);
 end
+UpdateEffectsColor(handles);
 
 function HideButton(handles, num)
 % Hide the button of the correponding pad
@@ -1476,6 +1897,11 @@ if(i == 16 && strcmp(get(handles.button16,'Visible'), 'off'))
     set(handles.chopEndStaticText,'Visible','off');
     set(handles.chopEndEditText,'Visible','off');
     set(handles.chopButton,'Visible','off');
+    set(handles.reversalButton,'BackgroundColor',[0.94 0.94 0.94]);
+    set(handles.delayButton,'BackgroundColor',[0.94 0.94 0.94]);
+    set(handles.speedUpButton,'BackgroundColor',[0.94 0.94 0.94]);
+    set(handles.voiceRemovalButton,'BackgroundColor',[0.94 0.94 0.94]);
+    set(handles.toneControlButton,'BackgroundColor',[0.94 0.94 0.94]);
 end
 
 function SelectStatus(handles,num)
@@ -1490,9 +1916,14 @@ function PlayStatus(handles,num)
 
 function EmptyPadStatus(handles,num)
 % Show the 'Empty Pad' status
-    statusStr = sprintf('Empty pad %d, please first load/copy a sample or use piano keyboard',num);
+    statusStr = sprintf('Empty pad %d, please first load/copy/cut a sample',num);
     set(handles.status,'String',statusStr);
-    
+
+function NoSampleStatus(handles)
+% Show the 'No Sample' status
+    statusStr = sprintf('There is currently no sample in all pads, please first use ''Load''.');
+    set(handles.status,'String',statusStr);
+
 function ShowBusyStatus(handles)
 % Show the 'Busy' status
     set(handles.busy_Status,'String',' Busy');
