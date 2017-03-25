@@ -6,9 +6,11 @@ function [ outSample ] = Load(filePath)
     if isnumeric(filePath)
         outSample.points = [];
         outSample.sampleRate = 0;
+        outSample.selectPeriod = [];
     else
         [samplePoints, sampleRate] = audioread(filePath);
         outSample.points = samplePoints;
         outSample.sampleRate = sampleRate;
+        outSample.selectPeriod = [0 size(samplePoints,1)];
     end
 end

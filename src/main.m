@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 14-Mar-2017 20:26:15
+% Last Modified by GUIDE v2.5 15-Mar-2017 15:10:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -58,6 +58,7 @@ handles.output = hObject;
 for i = 1:16
     handles.samples(i).points = [];
     handles.samples(i).sampleRate = 0;
+    handles.samples(i).selectPeriod = [];   % unit: samplePoints(used in chopping and graphing)
 end
 
 % Save the pad number of current selected sample
@@ -587,15 +588,16 @@ function LoadToPad(hObject,handles,num)
 if filename == 0  % if user canceled to load
     set(handles.status,'String','Load Mode: Cancel to load');
 else
-    BusyStatus(handles);        % show the 'Busy' status
+    ShowBusyStatus(handles);    % show the 'Busy' status
     pause(.0000001);            % pause for a short time to allow status changes
     handles.samples(num) = Load([pathname, filename]);  % load the file to handles
     guidata(hObject, handles);  % update handles
+    HideBusyStatus(handles);    % hide the 'Busy' status
     SetPadColor(handles);       % refresh the color of pads
     statusStr = sprintf('Load Mode: Successfully load ''%s'' into pad %d',filename,num);
     set(handles.status,'String',statusStr);
     ShowButton(handles, num);
-    if(handles.curPad == 0)
+    if(handles.curPad == 0)     % if there is no other sample
         SelectButton(hObject,handles,num);
     end
 end
@@ -609,9 +611,10 @@ function SaveFromPad(handles,num)
 if filename == 0     % if user canceled to save
     set(handles.status,'String','Save Mode: Cancel to save');
 else
-    BusyStatus(handles);        % show the 'Busy' status
+    ShowBusyStatus(handles);    % show the 'Busy' status
     pause(.0000001);            % pause for a short time to allow status changes
     Save([pathname, filename],handles.samples(num));  % save the file
+    HideBusyStatus(handles);    % hide the 'Busy' status
     statusStr = sprintf('Save Mode: Successfully save from pad %d as ''%s''',num,filename);
     set(handles.status,'String',statusStr);
 end
@@ -634,10 +637,11 @@ if(isempty(get(handles.copyButton,'UserData')))     % if it was the first click
     end
 else    % if it was the second click, copy the sample and reset color
     copyFromPad = get(handles.copyButton,'UserData');
-    BusyStatus(handles);        % show the 'Busy' status
+    ShowBusyStatus(handles);    % show the 'Busy' status
     pause(.0000001);            % pause for a short time to allow status changes
     handles.samples(num) = handles.samples(copyFromPad);   % copy the sample
     guidata(hObject, handles);  % update handles
+    HideBusyStatus(handles);    % hide the 'Busy' status
     SetPadColor(handles);   % refresh color
     ShowButton(handles,num);
     if(copyFromPad == handles.curPad)
@@ -669,14 +673,16 @@ if(isempty(get(handles.cutButton,'UserData')))     % if it was the first click
     end
 else    % if it was the second click, copy the sample, delete the original and reset color
     cutFromPad = get(handles.cutButton,'UserData');
-    BusyStatus(handles);        % show the 'Busy' status
+    ShowBusyStatus(handles);    % show the 'Busy' status
     pause(.0000001);            % pause for a short time to allow status changes
     handles.samples(num) = handles.samples(cutFromPad);   % copy the sample
     if(num ~= cutFromPad)    % if cutting a pad to itself will not delete the sample
         handles.samples(cutFromPad).points = [];  % delete the original sample
         handles.samples(cutFromPad).sampleRate = 0;
+        handles.samples(cutFromPad).selectPeriod = [];
     end
     guidata(hObject, handles);  % update handles
+    HideBusyStatus(handles);    % hide the 'Busy' status
     HideButton(handles, cutFromPad);  % hide the button of original pad
     ShowButton(handles,num);    % show the button of new pad
     if(cutFromPad == handles.curPad)
@@ -696,11 +702,13 @@ function DelFromPad(hObject,handles,num)
 %   hObject: handle to pad
 %   handles: structure with handles and user data
 %   num: the pad which the sample needs to be deleted
-BusyStatus(handles);        % show the 'Busy' status
+ShowBusyStatus(handles);    % show the 'Busy' status
 pause(.0000001);            % pause for a short time to allow status changes
 handles.samples(num).points = [];  % delete the sample
 handles.samples(num).sampleRate = 0;
+handles.samples(num).selectPeriod = [];
 guidata(hObject, handles);  % update handles
+HideBusyStatus(handles);    % hide the 'Busy' status
 SetPadColor(handles);       % refresh the color of pads
 
 statusStr = sprintf('Delete Mode: Successfully delete the sample in pad %d',num);
@@ -715,9 +723,10 @@ function PlayFromPad(handles, num)
 % Play the sample from the corresponding pad
 %   handles: structure with handles and user data
 %   num: the pad which the sample needs to be played
-BusyStatus(handles);    % show the 'Busy' status
+ShowBusyStatus(handles);% show the 'Busy' status
 pause(0.0000001);       % pause for a short time to allow status changes
 PlaySound(handles.samples(num));
+HideBusyStatus(handles);    % hide the 'Busy' status
 PlayStatus(handles,num);  % show the 'Playing' status
 
 function [pathname, filename] = GetLoadPath()
@@ -742,7 +751,8 @@ function button1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button1
-
+SelectButton(hObject, handles, 1);  % select the button
+SelectStatus(handles,1);    % show status
 
 % --- Executes on button press in button2.
 function button2_Callback(hObject, eventdata, handles)
@@ -751,7 +761,8 @@ function button2_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button2
-
+SelectButton(hObject, handles, 2);  % select the button
+SelectStatus(handles,2);    % show status
 
 % --- Executes on button press in button3.
 function button3_Callback(hObject, eventdata, handles)
@@ -760,7 +771,8 @@ function button3_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button3
-
+SelectButton(hObject, handles, 3);  % select the button
+SelectStatus(handles,3);    % show status
 
 % --- Executes on button press in button4.
 function button4_Callback(hObject, eventdata, handles)
@@ -769,7 +781,8 @@ function button4_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button4
-
+SelectButton(hObject, handles, 4);  % select the button
+SelectStatus(handles,4);    % show status
 
 % --- Executes on button press in button5.
 function button5_Callback(hObject, eventdata, handles)
@@ -778,7 +791,8 @@ function button5_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button5
-
+SelectButton(hObject, handles, 5);  % select the button
+SelectStatus(handles,5);    % show status
 
 % --- Executes on button press in button6.
 function button6_Callback(hObject, eventdata, handles)
@@ -787,7 +801,8 @@ function button6_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button6
-
+SelectButton(hObject, handles, 6);  % select the button
+SelectStatus(handles,6);    % show status
 
 % --- Executes on button press in button7.
 function button7_Callback(hObject, eventdata, handles)
@@ -796,7 +811,8 @@ function button7_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button7
-
+SelectButton(hObject, handles, 7);  % select the button
+SelectStatus(handles,7);    % show status
 
 % --- Executes on button press in button8.
 function button8_Callback(hObject, eventdata, handles)
@@ -805,7 +821,8 @@ function button8_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button8
-
+SelectButton(hObject, handles, 8);  % select the button
+SelectStatus(handles,8);    % show status
 
 % --- Executes on button press in button9.
 function button9_Callback(hObject, eventdata, handles)
@@ -814,7 +831,8 @@ function button9_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button9
-
+SelectButton(hObject, handles, 9);  % select the button
+SelectStatus(handles,9);    % show status
 
 % --- Executes on button press in button10.
 function button10_Callback(hObject, eventdata, handles)
@@ -823,7 +841,8 @@ function button10_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button10
-
+SelectButton(hObject, handles, 10);  % select the button
+SelectStatus(handles,10);    % show status
 
 % --- Executes on button press in button11.
 function button11_Callback(hObject, eventdata, handles)
@@ -832,7 +851,8 @@ function button11_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button11
-
+SelectButton(hObject, handles, 11);  % select the button
+SelectStatus(handles,11);    % show status
 
 % --- Executes on button press in button12.
 function button12_Callback(hObject, eventdata, handles)
@@ -841,7 +861,8 @@ function button12_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button12
-
+SelectButton(hObject, handles, 12);  % select the button
+SelectStatus(handles,12);    % show status
 
 % --- Executes on button press in button13.
 function button13_Callback(hObject, eventdata, handles)
@@ -850,7 +871,8 @@ function button13_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button13
-
+SelectButton(hObject, handles, 13);  % select the button
+SelectStatus(handles,13);    % show status
 
 % --- Executes on button press in button14.
 function button14_Callback(hObject, eventdata, handles)
@@ -859,7 +881,8 @@ function button14_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button14
-
+SelectButton(hObject, handles, 14);  % select the button
+SelectStatus(handles,14);    % show status
 
 % --- Executes on button press in button15.
 function button15_Callback(hObject, eventdata, handles)
@@ -868,7 +891,8 @@ function button15_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button15
-
+SelectButton(hObject, handles, 15);  % select the button
+SelectStatus(handles,15);    % show status
 
 % --- Executes on button press in button16.
 function button16_Callback(hObject, eventdata, handles)
@@ -877,7 +901,8 @@ function button16_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of button16
-
+SelectButton(hObject, handles, 16);  % select the button
+SelectStatus(handles,16);    % show status
 
 % --- Executes on button press in loadButton.
 function loadButton_Callback(hObject, eventdata, handles)
@@ -1006,6 +1031,91 @@ elseif button_state == get(hObject,'Min')
     ClearStatus(handles);
 end
 
+function Plot(handles)
+% Plot the waveplot of selected sample
+%   handles: structure with handles and user data
+num = handles.curPad;   % get the current pad
+ShowBusyStatus(handles);    % show the 'Busy' status
+pause(.0000001);            % pause for a short time to allow status changes
+if(size(handles.samples(num).points,2) == 1) % if the sample is mono
+    set(handles.axes1,'Visible','on');
+    set(handles.axes2,'Visible','off');
+    
+    WavePlot(handles.axes1, handles.samples(num).points, handles.samples(num).sampleRate);
+    ChangePlotXAxisLabel(handles.axes1, handles);
+    set(handles.axes1,'XAxisLocation','top',...
+            'Position',[181 450 925 212],...
+            'Box','on');
+
+else % if the sample is stereo
+    set(handles.axes1,'Visible','on');
+    set(handles.axes2,'Visible','on');
+    
+    WavePlot(handles.axes1, handles.samples(num).points(:,1), handles.samples(num).sampleRate);
+    WavePlot(handles.axes2, handles.samples(num).points(:,2), handles.samples(num).sampleRate);
+    ChangePlotXAxisLabel(handles.axes1, handles);
+    ChangePlotXAxisLabel(handles.axes2, handles);
+    set(handles.axes1,'XAxisLocation','top',...
+            'Position',[181 562 925 100],...
+            'Box','on');
+    set(handles.axes2,'XAxisLocation','top',...
+            'Position',[181 450 925 100],...
+            'XTickLabel',{},...
+            'Box','on');
+
+end
+HideBusyStatus(handles);    % hide the 'Busy' status
+
+function ChangePlotXAxisLabel(ax, handles)
+% Change the x-axis of the waveplot
+%   ax: the axis of the waveplot
+%   handles: structure with handles and user data
+num = handles.curPad;   % get the current pad
+sampleRate = handles.samples(num).sampleRate;
+startTime = handles.samples(num).selectPeriod(1)/sampleRate;   % get start time in sec
+endTime = handles.samples(num).selectPeriod(2)/sampleRate;     % get end time in sec
+elapseTime = endTime - startTime;
+if(elapseTime >= 15) % 15 s
+    interval = ceil(elapseTime / 15);
+    format = 'mm:ss';
+elseif(elapseTime >= 1.5) % 1.5 s
+    interval = ceil(elapseTime*10 / 15)/10;
+    format = 'mm:ss.S';
+elseif(elapseTime >= 0.15) % 0.15 s
+    interval = ceil(elapseTime*100 / 15)/100;
+    format = 'mm:ss.SS';
+elseif(elapseTime >= 0.015) % 0.015 s
+    interval = ceil(elapseTime*1000 / 15)/1000;
+    format = 'mm:ss.SSS';
+elseif(elapseTime >= 0.0015) % 0.0015 s
+    interval = ceil(elapseTime*10000 / 15)/10000;
+    format = 'mm:ss.SSSS';
+elseif(elapseTime >= 0.00015) % 0.00015 s
+    interval = ceil(elapseTime*100000 / 15)/100000;
+    format = 'mm:ss.SSSSS';
+elseif(elapseTime >= 0.000015) % 0.000015 s
+    interval = ceil(elapseTime*1000000 / 15)/1000000;
+    format = 'mm:ss.SSSSSS';
+else % < 0.000015 s
+    interval = ceil(elapseTime*10000000 / 15)/10000000;
+    format = 'mm:ss.SSSSSSS';
+end
+
+xtick = ceil(startTime) + interval.* [1:15];
+xticklabel = cell(1,15);
+for i = 1:15
+    if(xtick(i) > 3600)
+        xticklabel{i} = string(duration([0 0 xtick(i)],'Format',['hh:',format]));
+    else
+        xticklabel{i} = string(duration([0 0 xtick(i)],'Format',format));
+    end
+end
+axes(ax);
+xlim([startTime endTime]);
+set(ax,'XTick',xtick,'XTickLabel',xticklabel);
+
+
+
 function SetPadColor(handles)
 % Set the color of empty pad to red and others to green
 for i = 1:16
@@ -1043,6 +1153,12 @@ if(~(handles.curPad == num || ...
 end
 handles.curPad = num;
 guidata(hObject, handles);
+% if it's in Copy Mode or Cut Mode, don't plot the gragh;
+% otherwise, plot the graph
+if(~(get(handles.copyButton,'Value') == get(handles.copyButton,'Max') ||...
+        get(handles.cutButton,'Value') == get(handles.cutButton,'Max')))
+    Plot(handles);
+end
 
 function HideButton(handles, num)
 % Hide the button of the correponding pad
@@ -1064,6 +1180,11 @@ if(i == 16 && strcmp(get(handles.button16,'Visible'), 'off'))
     guidata(hObject, handles);
 end
 
+function SelectStatus(handles,num)
+% Show the 'Select' status
+    statusStr = sprintf('Pad %d selected',num);
+    set(handles.status,'String',statusStr);
+
 function PlayStatus(handles,num)
 % Show the 'Playing' status
     statusStr = sprintf('Playing from pad %d',num);
@@ -1074,9 +1195,13 @@ function EmptyPadStatus(handles,num)
     statusStr = sprintf('Empty pad %d, please first load/copy a sample or use piano keyboard',num);
     set(handles.status,'String',statusStr);
     
-function BusyStatus(handles)
+function ShowBusyStatus(handles)
 % Show the 'Busy' status
-    set(handles.status,'String','Busy');
+    set(handles.busy_Status,'String',' Busy');
+    
+function HideBusyStatus(handles)
+% Hide the 'Busy' status
+    set(handles.busy_Status,'String','');
     
 function ClearStatus(handles)
 % Clear the status bar
