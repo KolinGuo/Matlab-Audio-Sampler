@@ -1,0 +1,116 @@
+v1.0
+	Basic Input
+
+v1.1
+	Improve readability - Change from 'sample#' to 'pad#'
+	If click a pad to play while MATLAB is playing from another pad, clear sound and play the selected pad
+	Add 'Busy' status to Load and Playing
+	Add 'Playing' Status
+	Bug fixed - wrong status when tempting to play from empty pad
+	Add 'EmptyPad' Status
+	Bug fixed - stop playing when the GUI is closed
+	Add Save Mode
+
+v1.2
+	Add Delete Mode
+	Improvement - add a field 'curPad' to handles to store the current pad
+	Bug fixed - stop playing when the sample is deleted
+	Add Copy Mode
+	Add Cut Mode
+	Add Joke - Try Copy or cut from a pad to itself
+	Bug fixed - cutting a pad to itself deletes the sample
+
+v1.3
+	Bug fixed - Cut Mode Run-on
+	Bug fixed - If detele the last pad, set curPad = 0
+	Bug fixed - Delete a pad that is not playing should not clear sound
+	Improvement - add function 'PlayFromPad'
+	Improvement - separate function 'ShowButton' into 'ShowButton' & 'SelectButton' functions
+	Improvement - separate function 'HideButton' into 'HideButton' & 'SelectOtherButton' functions
+	Bug fixed - connection between 'Load', 'Save', 'Copy', 'Cut', 'Delete' & button selection(guidata)
+	Bug fixed - connection between 'SelectButton', 'SelectOtherButton'(guidata)
+	Improvement - add filename in status bar when loading or saving
+
+v1.4
+	Add functionality to select button
+	Add Waveplot
+	Improvement - separate status bar and busy_Status bar
+	Improvement - change the x-axis of waveplot to time in format 'hh:mm:ss.SSSSSSS'
+
+v1.5
+	Add Chopping
+	Improvement - select sample using a two-knobs slider
+	Improvement - change x-axis limit while using the slider
+	Bug fixed - wrong time format of the x-axis label
+	Add 'Busy' status to change x-axis limit
+	Bug fixed - start time & end time incorrect format
+	Bug fixed - start time < 0 & end time > length
+	Bug fixed - start time > end time & end time < start time
+
+v1.6
+	Bug fixed - Clear Status
+	Add 'Chop' Status
+	Bug fixed - Cannot chopped from beginning(selectPeriod starts from 1, not 0)
+	Bug fixed - delete itself won't clear sound
+	Bug fixed - if no other pads available, close the graph and chopping selection
+  ***	Bug fixed - copy/cut/load others to itself should clear sound and change graph
+
+v1.7
+	Equalizer GUI Design
+	Tone Control Algorithm based on Fourier Transform
+
+v1.8
+	Bug fixed - Add NoSampleStatus
+	Improvement - Add TooltipString to Load Save Copy Cut & Delete
+	Add Effects
+
+v1.9
+	Add Piano Keyboard
+	Improvement - add left and right channel indicator
+	Improvement - improve the efficiency of delay algorithm
+
+v2.0
+	Add Loop Recording
+
+v2.1
+	Improvement - change 'Visible' to 'Enable' for the buttons
+	Improvement - prevent user from using other functionalities in Loop Recording Mode
+	Improvement - Add function RecordPad for recording
+	Add 'Save To File' and 'Save To Pad'
+	Add status for 'Loop Recording Mode'
+
+v2.2
+	Bug fixed - Recording not full length
+	Appearance Enhancement - Loop Recording
+	Add time indicator
+	Improvement - Check the formats of 'BPM' and '# of Bars'
+	Add Play button for Loop Recording
+
+v2.3
+	Add timer class to control the current time indicator
+	Add the current time indicator to loop recording and playRecordButton
+	
+v2.4
+	Add 'recordPlotText' to indicate the plot is the recording
+	Improvement - remove slider and chopping from the recording plot
+	Add timer class to control plotting while recording
+
+v2.5
+	Bug fixed - close the gui while recording(clear error)
+	Bug fixed - loop ploting
+	Bug fixed - sample is shorter than its elapsed time(set to blank)
+	Bug fixed - loop ploting(mono)
+	Bug fixed - replot the actual recordSample when stop recording
+	Bug fixed - Reclick recording
+	Bug fixed - plot the sample again when you click the pad(the sample is shorter than its elapsed time)
+	Bug fixed - No sample when start recording
+	Bug fixed - too large recording
+	Bug fixed - stop recording without recording anything and than begin recording
+	Bug fixed - Click to play from a pad when playing from recording
+	Bug fixed - too long recording(warning at 30min, maximum 1h 30min)
+
+Known bugs:
+	Bugs that do need to be fixed:
+		None
+	I don't want to fix the following bugs:
+		x-axis label change according to number of characters
