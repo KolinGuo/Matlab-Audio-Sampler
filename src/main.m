@@ -22,7 +22,7 @@ function varargout = main(varargin)
 
 % Edit the above text to modify the response to help main
 
-% Last Modified by GUIDE v2.5 15-Mar-2017 15:10:24
+% Last Modified by GUIDE v2.5 16-Mar-2017 10:24:54
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -64,6 +64,15 @@ end
 % Save the pad number of current selected sample
 handles.curPad = 0;
 
+% Draw a java slider
+jRangeSlider = com.jidesoft.swing.RangeSlider(0,192000*10,0,192000*10);  % min,max,low,high
+jRangeSlider = javacomponent(jRangeSlider, [174,680,939,25], hObject);
+set(jRangeSlider, 'PaintTicks',true,...
+        'Visible',0, 'Focusable',0,'SnapToTicks',0,...
+        'StateChangedCallback',{@slider_StateChangedCallback,handles},...
+        'MouseReleasedCallback',{@slider_MouseReleasedCallback,handles});
+handles.slider = jRangeSlider;
+    
 % Update handles structure
 guidata(hObject, handles);
 
@@ -82,6 +91,30 @@ function varargout = main_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+
+% --- Executes during object creation, after setting all properties.
+function chopStartEditText_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to chopStartEditText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+% --- Executes during object creation, after setting all properties.
+function chopEndEditText_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to chopEndEditText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
 
 % --- Executes on button press in pad1.
 function pad1_Callback(hObject, eventdata, handles)
@@ -1046,7 +1079,6 @@ if(size(handles.samples(num).points,2) == 1) % if the sample is mono
     set(handles.axes1,'XAxisLocation','top',...
             'Position',[181 450 925 212],...
             'Box','on');
-
 else % if the sample is stereo
     set(handles.axes1,'Visible','on');
     set(handles.axes2,'Visible','on');
@@ -1062,46 +1094,42 @@ else % if the sample is stereo
             'Position',[181 450 925 100],...
             'XTickLabel',{},...
             'Box','on');
-
 end
+pause(.0000001);            % pause for a short time
+
+% change the start & end time edit text
+ChangeChopEditText(handles);
+
+% get the select period and lasting time
+period = handles.samples(num).selectPeriod;
+duration = size(handles.samples(num).points,1);
+% set the slider to current property
+set(handles.slider,'Minimum',0,'Maximum',duration,...
+            'LowValue',period(1),'HighValue',period(2));
+
+% set slider and chopping visible
+set(handles.slider,'Visible',1);
+set(handles.chopStartStaticText,'Visible','on');
+set(handles.chopStartEditText,'Visible','on');
+set(handles.chopEndStaticText,'Visible','on');
+set(handles.chopEndEditText,'Visible','on');
+set(handles.chopButton,'Visible','on');
+
 HideBusyStatus(handles);    % hide the 'Busy' status
 
 function ChangePlotXAxisLabel(ax, handles)
 % Change the x-axis of the waveplot
 %   ax: the axis of the waveplot
 %   handles: structure with handles and user data
+ShowBusyStatus(handles);    % show the 'Busy' status
+
 num = handles.curPad;   % get the current pad
-sampleRate = handles.samples(num).sampleRate;
+sampleRate = handles.samples(num).sampleRate;   % get the current sample rate
 startTime = handles.samples(num).selectPeriod(1)/sampleRate;   % get start time in sec
 endTime = handles.samples(num).selectPeriod(2)/sampleRate;     % get end time in sec
-elapseTime = endTime - startTime;
-if(elapseTime >= 15) % 15 s
-    interval = ceil(elapseTime / 15);
-    format = 'mm:ss';
-elseif(elapseTime >= 1.5) % 1.5 s
-    interval = ceil(elapseTime*10 / 15)/10;
-    format = 'mm:ss.S';
-elseif(elapseTime >= 0.15) % 0.15 s
-    interval = ceil(elapseTime*100 / 15)/100;
-    format = 'mm:ss.SS';
-elseif(elapseTime >= 0.015) % 0.015 s
-    interval = ceil(elapseTime*1000 / 15)/1000;
-    format = 'mm:ss.SSS';
-elseif(elapseTime >= 0.0015) % 0.0015 s
-    interval = ceil(elapseTime*10000 / 15)/10000;
-    format = 'mm:ss.SSSS';
-elseif(elapseTime >= 0.00015) % 0.00015 s
-    interval = ceil(elapseTime*100000 / 15)/100000;
-    format = 'mm:ss.SSSSS';
-elseif(elapseTime >= 0.000015) % 0.000015 s
-    interval = ceil(elapseTime*1000000 / 15)/1000000;
-    format = 'mm:ss.SSSSSS';
-else % < 0.000015 s
-    interval = ceil(elapseTime*10000000 / 15)/10000000;
-    format = 'mm:ss.SSSSSSS';
-end
+[interval,factor,format] = GetTimeFormat(handles);     % Calculate the interval and format for time
 
-xtick = ceil(startTime) + interval.* [1:15];
+xtick = ceil(startTime*factor)/factor + interval.* [0:14];
 xticklabel = cell(1,15);
 for i = 1:15
     if(xtick(i) > 3600)
@@ -1111,10 +1139,239 @@ for i = 1:15
     end
 end
 axes(ax);
-xlim([startTime endTime]);
-set(ax,'XTick',xtick,'XTickLabel',xticklabel);
+if(startTime >= endTime)
+    set(handles.status,'String','Too small interval, please first chop the sample down');
+else
+    xlim([startTime endTime]);
+    set(ax,'XTick',xtick,'XTickLabel',xticklabel);
+end
 
+HideBusyStatus(handles);    % hide the 'Busy' status
 
+% --- Executes on dragging the slider.
+function slider_StateChangedCallback(hObject, eventdata, handles)
+% hObject    handle to jRandeSlider
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data
+% Update handles structure
+% guidata(handles.main,handles);
+
+% Retrieve Latest handles structure
+handles = guidata(handles.main);
+
+% get current select period
+low = hObject.getLowValue();
+high = hObject.getHighValue();
+curPeriod = [low high];
+
+% apply change to selectPeriod
+num = handles.curPad;   % get the current pad
+handles.samples(num).selectPeriod = curPeriod;
+% Update handles structure
+guidata(handles.main,handles);
+
+% change the start & end time edit text
+ChangeChopEditText(handles);
+
+% --- Executes on releasing the mouse on the slider.
+function slider_MouseReleasedCallback(hObject, eventdata, handles)
+% hObject    handle to jRandeSlider
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data
+% Update handles structure
+% guidata(handles.main,handles);
+
+% Retrieve Latest handles structure
+handles = guidata(handles.main);
+
+num = handles.curPad;   % get the current pad
+% Change x-axis label
+if(size(handles.samples(num).points,2) == 1) % if the sample is mono
+    ChangePlotXAxisLabel(handles.axes1, handles);
+else % if the sample is stereo
+    ChangePlotXAxisLabel(handles.axes1, handles);
+    ChangePlotXAxisLabel(handles.axes2, handles);
+    set(handles.axes2, 'XTickLabel',{});
+end
+
+function chopStartEditText_Callback(hObject, eventdata, handles)
+% hObject    handle to chopStartEditText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of chopStartEditText as text
+%        str2double(get(hObject,'String')) returns contents of chopStartEditText as a double
+ClearStatus(handles);
+
+num = handles.curPad;   % get the current pad
+sampleRate = handles.samples(num).sampleRate;   % get the current sample rate
+str = get(hObject,'String');
+seconds = ConvertStrToTime(str,handles);
+
+if(~isempty(seconds)) % if the format is correct
+    startTime = seconds * sampleRate;
+    if(startTime < 0 || startTime > size(handles.samples(num).points,1)) % if the start time is out of bound
+        set(handles.status,'String','Error: Start time out of bound');
+    elseif(startTime > handles.samples(num).selectPeriod(2)) % if the start time > end time
+        set(handles.status,'String','Error: Start time should not be larger than end time');
+    else
+        handles.samples(num).selectPeriod(1) = startTime;
+        % Update handles structure
+        guidata(hObject,handles);
+        set(handles.slider,'LowValue',startTime);
+        % Change x-axis label
+        if(size(handles.samples(num).points,2) == 1) % if the sample is mono
+            ChangePlotXAxisLabel(handles.axes1, handles);
+        else % if the sample is stereo
+            ChangePlotXAxisLabel(handles.axes1, handles);
+            ChangePlotXAxisLabel(handles.axes2, handles);
+            set(handles.axes2, 'XTickLabel',{});
+        end
+    end
+end
+ChangeChopEditText(handles);
+
+function chopEndEditText_Callback(hObject, eventdata, handles)
+% hObject    handle to chopEndEditText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of chopEndEditText as text
+%        str2double(get(hObject,'String')) returns contents of chopEndEditText as a double
+ClearStatus(handles);
+
+num = handles.curPad;   % get the current pad
+sampleRate = handles.samples(num).sampleRate;   % get the current sample rate
+str = get(hObject,'String');
+seconds = ConvertStrToTime(str,handles);
+
+if(~isempty(seconds)) % if the format is correct
+    endTime = seconds * sampleRate;
+    if(endTime < 0 || endTime > size(handles.samples(num).points,1)) % if the end time is out of bound
+        set(handles.status,'String','Error: End time out of bound');
+    elseif(endTime < handles.samples(num).selectPeriod(1)) % if the start time < end time
+        set(handles.status,'String','Error: End time should not be smaller than start time');
+    else
+        handles.samples(num).selectPeriod(2) = endTime;
+        % Update handles structure
+        guidata(hObject,handles);
+        set(handles.slider,'HighValue',endTime);
+        % Change x-axis label
+        if(size(handles.samples(num).points,2) == 1) % if the sample is mono
+            ChangePlotXAxisLabel(handles.axes1, handles);
+        else % if the sample is stereo
+            ChangePlotXAxisLabel(handles.axes1, handles);
+            ChangePlotXAxisLabel(handles.axes2, handles);
+            set(handles.axes2, 'XTickLabel',{});
+        end
+    end
+end
+ChangeChopEditText(handles);
+
+function seconds = ConvertStrToTime(str,handles)
+% convert a string to time in seconds
+%   str: the input string
+%   seconds: the corresponding time in seconds
+[C,matches] = strsplit(str,':');
+C = str2double(C);
+if(any(isnan(C)) || ~isreal(C) || length(matches) > 2) % if any of the element in C is NaN, complex numberor or two ':', wrong format
+    set(handles.status,'String','Error: Wrong time format');
+    seconds = [];
+else    % correct format
+    if(isempty(matches)) % if there is no ':', just seconds
+        seconds = C;
+    elseif(length(matches) == 1) % if the time is 'mm:ss.SSS'
+        seconds = C(1) * 60 + C(2);
+    else    % if the time is 'hh:mm:ss.SSS'
+        seconds = C(1) * 3600 + C(2) * 60 + C(3);
+    end
+end
+    
+% --- Executes on button press in chopButton.
+function chopButton_Callback(hObject, eventdata, handles)
+% hObject    handle to chopButton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+ShowBusyStatus(handles);    % show the 'Busy' status
+pause(.0000001);            % pause for a short time to allow status changes
+clear sound;            % stop playing
+num = handles.curPad;   % get the current pad
+startSample = handles.samples(num).selectPeriod(1);
+endSample = handles.samples(num).selectPeriod(2);
+handles.samples(num).points = handles.samples(num).points(startSample:endSample,:);
+handles.samples(num).selectPeriod = [0 size(handles.samples(num).points,1)];
+% Update handles structure
+guidata(hObject,handles);
+Plot(handles);
+HideBusyStatus(handles);    % hide the 'Busy' status
+
+function ChangeChopEditText(handles)
+% change the chop start & end edit text
+[~,~,format] = GetTimeFormat(handles);    % Calculate the format for time
+num = handles.curPad;   % get the current pad
+sampleRate = handles.samples(num).sampleRate;   % get the current sample rate
+startTime = handles.samples(num).selectPeriod(1)/sampleRate;   % get start time in sec
+endTime = handles.samples(num).selectPeriod(2)/sampleRate;     % get end time in sec
+% change start time edit text
+if(startTime > 3600)
+    set(handles.chopStartEditText,'String',...
+        string(duration([0 0 startTime],'Format',['hh:',format])));
+else
+    set(handles.chopStartEditText,'String',...
+        string(duration([0 0 startTime],'Format',format)));
+end
+% change end time edit text
+if(endTime > 3600)
+    set(handles.chopEndEditText,'String',...
+        string(duration([0 0 endTime],'Format',['hh:',format])));
+else
+    set(handles.chopEndEditText,'String',...
+        string(duration([0 0 endTime],'Format',format)));
+end
+
+function [interval,factor,format] = GetTimeFormat(handles)
+% Calculate the interval and format for time
+%   handles: structure with handles and user data
+%   interval: the interval of waveplot x-axis
+%   format: the format for duration conversion
+num = handles.curPad;   % get the current pad
+sampleRate = handles.samples(num).sampleRate;   % get the current sample rate
+startTime = handles.samples(num).selectPeriod(1)/sampleRate;   % get start time in sec
+endTime = handles.samples(num).selectPeriod(2)/sampleRate;     % get end time in sec
+elapseTime = endTime - startTime;
+if(elapseTime >= 15) % 15 s
+    interval = ceil(elapseTime / 15);
+    format = 'mm:ss';
+    factor = 1;
+elseif(elapseTime >= 1.5) % 1.5 s
+    interval = ceil(elapseTime*10 / 15)/10;
+    format = 'mm:ss.S';
+    factor = 10;
+elseif(elapseTime >= 0.15) % 0.15 s
+    interval = ceil(elapseTime*100 / 15)/100;
+    format = 'mm:ss.SS';
+    factor = 100;
+elseif(elapseTime >= 0.015) % 0.015 s
+    interval = ceil(elapseTime*1000 / 15)/1000;
+    format = 'mm:ss.SSS';
+    factor = 1000;
+elseif(elapseTime >= 0.0015) % 0.0015 s
+    interval = ceil(elapseTime*10000 / 15)/10000;
+    format = 'mm:ss.SSSS';
+    factor = 10000;
+elseif(elapseTime >= 0.00015) % 0.00015 s
+    interval = ceil(elapseTime*100000 / 15)/100000;
+    format = 'mm:ss.SSSSS';
+    factor = 100000;
+elseif(elapseTime >= 0.000015) % 0.000015 s
+    interval = ceil(elapseTime*1000000 / 15)/1000000;
+    format = 'mm:ss.SSSSSS';
+    factor = 1000000;
+else % < 0.000015 s
+    interval = ceil(elapseTime*10000000 / 15)/10000000;
+    format = 'mm:ss.SSSSSSS';
+    factor = 10000000;
+end
 
 function SetPadColor(handles)
 % Set the color of empty pad to red and others to green
