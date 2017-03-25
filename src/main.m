@@ -59,6 +59,7 @@ for i = 1:16
     handles.samples(i).points = [];
     handles.samples(i).sampleRate = 0;
     handles.samples(i).selectPeriod = [];   % unit: samplePoints(used in chopping and graphing)
+    handles.samples(i).filterGain = [];     % filter gain for tone control (units: dB, range: -20~20)
 end
 
 % Save the pad number of current selected sample
@@ -722,6 +723,7 @@ else    % if it was the second click, copy the sample, delete the original and r
         handles.samples(cutFromPad).points = [];  % delete the original sample
         handles.samples(cutFromPad).sampleRate = 0;
         handles.samples(cutFromPad).selectPeriod = [];
+        handles.samples(cutFromPad).filterGain = [];
     end
     guidata(hObject, handles);  % update handles
     HideBusyStatus(handles);    % hide the 'Busy' status
@@ -754,6 +756,7 @@ pause(.0000001);            % pause for a short time to allow status changes
 handles.samples(num).points = [];  % delete the sample
 handles.samples(num).sampleRate = 0;
 handles.samples(num).selectPeriod = [];
+handles.samples(num).filterGain = [];
 guidata(hObject, handles);  % update handles
 HideBusyStatus(handles);    % hide the 'Busy' status
 SetPadColor(handles);       % refresh the color of pads
