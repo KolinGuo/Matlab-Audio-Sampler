@@ -1,6 +1,15 @@
 # Matlab-Audio-Sampler by α·UMi
 A Matlab group project for ENG6 @ UC-Davis
-![GitHub Logo](/images/main.png)
+
+Main GUI:  
+![GitHub Logo](/images/main.png)  
+  
+Equalizer GUI:  
+![GitHub Logo](/images/equalizer.png)  
+  
+Piano Keyboard GUI:  
+![GitHub Logo](/images/PianoKeyboard.png)  
+  
 ## Group Members: 
   * Kolin Guo  
   * Noah Yu  
