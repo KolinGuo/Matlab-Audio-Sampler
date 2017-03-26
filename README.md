@@ -2,7 +2,7 @@
 A Matlab group project for ENG6 @ UC-Davis
 
 ## Group Members: 
-Kolin Guo  
+--*Kolin Guo  
 Noah Yu  
 Agnes Li  
 
