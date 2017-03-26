@@ -16,8 +16,8 @@ Piano Keyboard GUI:
   * Agnes Li  
 
 ## Shortcoming: 
-  * Loop Recording only supports samples of 44.1 kHz sample rate  
-  * GUI resizing problem on different version of Matlab and/or different operating system  
+  * Loop Recording only supports samples of 44.1 kHz sample rate 
+  * GUI resizing problem on different version of Matlab and/or different operating system  
 
 ## Sources:
   * Piano keyboard is designed by [Mark Frankosky](https://www.mathworks.com/matlabcentral/fileexchange/21262-matlab-piano)  
