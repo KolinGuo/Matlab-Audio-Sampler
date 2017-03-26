@@ -5,6 +5,7 @@ A Matlab group project for ENG6 @ UC-Davis
 Kolin Guo
 Noah Yu
 Agnes Li
+
 ## Shortcoming:
   Loop Recording only supports samples at 44.1 kHz
   
