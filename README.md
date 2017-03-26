@@ -15,8 +15,8 @@ Piano Keyboard GUI:
   * Noah Yu  
   * Agnes Li  
 
-## Shortcoming: 
-  * Loop Recording only supports samples of 44.1 kHz sample rate 
+## Shortcoming:  
+  * Loop Recording only supports samples of 44.1 kHz sample rate  
   * GUI resizing problem on different version of Matlab and/or different operating system  
 
 ## Sources:
