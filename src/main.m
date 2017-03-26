@@ -246,8 +246,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,1);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 1);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 1);
@@ -290,8 +291,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,2);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 2);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 2);
@@ -334,8 +336,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,3);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 3);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 3);
@@ -378,8 +381,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,4);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 4);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 4);
@@ -422,8 +426,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,5);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 5);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 5);
@@ -466,8 +471,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,6);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 6);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 6);
@@ -510,8 +516,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,7);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 7);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 7);
@@ -554,8 +561,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,8);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 8);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 8);
@@ -598,8 +606,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,9);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 9);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 9);
@@ -642,8 +651,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,10);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 10);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 10);
@@ -686,8 +696,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,11);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 11);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 11);
@@ -730,8 +741,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,12);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 12);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 12);
@@ -774,8 +786,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,13);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 13);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 13);
@@ -818,8 +831,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,14);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 14);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 14);
@@ -862,8 +876,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,15);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 15);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 15);
@@ -906,8 +921,9 @@ else % if not in record mode
             DelFromPad(hObject,handles,16);
         % Normal Play sound
         else
-            % stop playing if the recordSample is currently playing
-            stopButton_Callback(handles.stopButton, NaN, handles);
+            if(get(handles.playRecordButton,'UserData'))     % if the recordSample is currently playing, stop it
+                stopButton_Callback(handles.stopButton, NaN, handles);
+            end
             SelectButton(hObject, handles, 16);
             pause(.01);            % pause for a short time to allow status changes
             PlayFromPad(handles, 16);
@@ -1190,7 +1206,7 @@ sample.isReversed = false;
 sample.delay = 0;
 sample.speedUp = 0;
 sample.isVoiceRemoved = false;
-sample.origSample = handles.samples(num);
+sample.origSample = sample;
 handles.samples(num) = sample;  % save the recording
 guidata(hObject, handles);  % update handles
 HideBusyStatus(handles);    % hide the 'Busy' status
@@ -1199,7 +1215,7 @@ set(handles.status,'String',statusStr);
 ShowButton(handles, num);   % show the button of the pad
 SelectButton(hObject,handles,num);  % select the button of the pad
 ResetPadColor(handles);     % reset the color of the pads
-set(handles.savePadButton,'UserData',[]);   % reset the userdata(exit the save mode)
+set(handles.savePadButton,'UserData',false);   % reset the userdata(exit the save mode)
 
 function [pathname, filename] = GetLoadPath()
 [filename, pathname] = uigetfile(...
@@ -2963,6 +2979,7 @@ set(handles.(str),'Visible','on');
 
 function SelectButton(hObject, handles, num)
 % Select the button of the corresponding pad
+
 str = ['button',num2str(num)];
 set(handles.(str),'Value',get(handles.(str),'Max'));
 % if in loop recording mode, set curPad and return

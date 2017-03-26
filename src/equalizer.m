@@ -22,7 +22,7 @@ function varargout = equalizer(varargin)
 
 % Edit the above text to modify the response to help equalizer
 
-% Last Modified by GUIDE v2.5 17-Mar-2017 17:35:33
+% Last Modified by GUIDE v2.5 25-Mar-2017 16:52:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
