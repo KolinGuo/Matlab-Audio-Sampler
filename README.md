@@ -17,6 +17,7 @@ Piano Keyboard GUI:
 
 ## Shortcoming:  
   * Loop Recording only supports samples of 44.1 kHz sample rate  
+  * Warning messages about the precision of timers' "StartDelay" in Command Window when user clicks the pad in Loop Recording Mode
   * GUI resizing problem on different version of Matlab and/or different operating system  
 
 ## Sources:
