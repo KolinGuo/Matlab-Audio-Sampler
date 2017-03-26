@@ -19,5 +19,5 @@ Piano Keyboard GUI:
   * Loop Recording only supports samples of 44.1 kHz sample rate
 
 ## Sources:
-  * Piano Keyboard Designed by [Mark Frankosky](https://www.mathworks.com/matlabcentral/fileexchange/21262-matlab-piano)  
-  * Fourier Transform Algorithm of the graphic equalizer comes from [oRbIt](http://blog.csdn.net/orbit/article/details/45485197)
+  * Piano keyboard is designed by [Mark Frankosky](https://www.mathworks.com/matlabcentral/fileexchange/21262-matlab-piano)  
+  * Fourier Transform algorithm of the graphic equalizer comes from [oRbIt](http://blog.csdn.net/orbit/article/details/45485197)
