@@ -2,13 +2,13 @@
 A Matlab group project for ENG6 @ UC-Davis
 
 Main GUI:  
-![GitHub Logo](/images/main.png)  
+![GitHub Logo](/images/main.png "Main GUI")  
   
 Equalizer GUI:  
-![GitHub Logo](/images/equalizer.png)  
+![GitHub Logo](/images/equalizer.png "Equalizer GUI")  
   
 Piano Keyboard GUI:  
-![GitHub Logo](/images/PianoKeyboard.png)  
+![GitHub Logo](/images/PianoKeyboard.png "Piano Keyboard GUI")  
   
 ## Group Members: 
   * Kolin Guo  
