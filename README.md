@@ -1,4 +1,4 @@
-# Matlab-Audio-Sampler by α·UMi
+# Matlab Audio Sampler by α·UMi
 A Matlab group project for ENG6 @ UC-Davis
 
 Main GUI:  
