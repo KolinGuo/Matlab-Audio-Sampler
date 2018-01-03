@@ -1,5 +1,5 @@
 # Matlab Audio Sampler by α·UMi
-A Matlab group project for ENG6 @ UC-Davis
+A Matlab group project for ENG 6 @ UC-Davis
 
 Main GUI:  
 ![GitHub Logo](/images/main.png "Main GUI")  
